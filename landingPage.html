@@ -630,25 +630,76 @@
       
       // دالة معالجة إرسال الطلب
       async function handleOrderSubmit(orderForm) {
+        // التحقق من صحة البيانات الأساسية
+        const full_name = orderForm.querySelector('#fullName').value.trim();
+        const phone_number = orderForm.querySelector('#phonenumber').value.trim();
+        const address = orderForm.querySelector('#address').value.trim();
+        const state_id = orderForm.querySelector('#state').value;
+        const shipping_type = orderForm.querySelector('input[name="shippingType"]:checked')?.value;
+        
+        // التحقق من الاسم الكامل
+        if (!full_name) {
+          alert('يرجى إدخال الاسم الكامل');
+          orderForm.querySelector('#fullName').focus();
+          orderForm.querySelector('#fullName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        
+        // التحقق من رقم الهاتف
+        if (!phone_number) {
+          alert('يرجى إدخال رقم الهاتف');
+          orderForm.querySelector('#phonenumber').focus();
+          orderForm.querySelector('#phonenumber').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        
+        // التحقق من العنوان
+        if (!address) {
+          alert('يرجى إدخال العنوان');
+          orderForm.querySelector('#address').focus();
+          orderForm.querySelector('#address').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        
+        // التحقق من اختيار الولاية
+        if (!state_id) {
+          alert('يرجى اختيار الولاية');
+          orderForm.querySelector('#state').focus();
+          orderForm.querySelector('#state').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        
+        // التحقق من نوع الشحن
+        if (!shipping_type) {
+          alert('يرجى اختيار نوع الشحن');
+          const shippingInputs = orderForm.querySelectorAll('input[name="shippingType"]');
+          if (shippingInputs.length > 0) {
+            shippingInputs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return false;
+        }
+        
         // التحقق من اختيار اللون إذا كان مطلوباً
         if (colors.length > 0 && !orderForm.querySelector('input[name="colorRadio"]:checked')) {
           alert('يرجى اختيار اللون');
+          const colorGroup = orderForm.querySelector('#color-radio-group');
+          if (colorGroup) {
+            colorGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
           return false;
         }
         
         // التحقق من اختيار المقاس إذا كان مطلوباً
         if (sizes.length > 0 && !orderForm.querySelector('input[name="sizeRadio"]:checked')) {
           alert('يرجى اختيار المقاس');
+          const sizeGroup = orderForm.querySelector('#size-radio-group');
+          if (sizeGroup) {
+            sizeGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
           return false;
         }
         
-        // جمع بيانات الطلب
-        const full_name = orderForm.querySelector('#fullName').value;
-        const phone_number = orderForm.querySelector('#phonenumber').value;
-        const address = orderForm.querySelector('#address').value;
-        const state_id = orderForm.querySelector('#state').value;
         const state_name = orderForm.querySelector('#state').selectedOptions[0]?.textContent || '';
-        const shipping_type = orderForm.querySelector('input[name="shippingType"]:checked').value;
         let quantity = parseInt(orderForm.querySelector('#quantity').value) || 1;
         
         // جمع بيانات اللون
@@ -734,6 +785,7 @@
         const { error } = await window.createOrder(orderObj);
         if (error) {
           alert('حدث خطأ أثناء إرسال الطلب: ' + error.message);
+          return false;
         } else {
           // تنفيذ أحداث البيكسل عند نجاح الطلب
           triggerPixelEvents(data, orderObj);
@@ -743,6 +795,8 @@
           if (successModal) {
             successModal.style.display = 'flex';
           }
+          
+          return true;
         }
       }
       
@@ -978,10 +1032,25 @@
     }
     
     // دالة إرسال الطلب من الزر الثابت
-    window.submitOrderFromFixedButton = function() {
+    window.submitOrderFromFixedButton = async function() {
       const orderForm = document.getElementById('order-form');
       if (orderForm) {
-        handleOrderSubmit(orderForm);
+        // التمرير إلى النموذج أولاً
+        orderForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // انتظار قليل للسماح بانتهاء التمرير قبل التحقق من صحة البيانات
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // ثم محاولة إرسال النموذج
+        const result = await handleOrderSubmit(orderForm);
+        
+        // إذا نجح الإرسال، إخفاء الزر الثابت
+        if (result !== false) {
+          const fixedButton = document.getElementById('fixed-submit-btn');
+          if (fixedButton) {
+            fixedButton.style.display = 'none';
+          }
+        }
       }
     }
     
