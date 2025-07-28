@@ -172,6 +172,45 @@
       font-weight: 500;
     }
     
+    /* زر إرسال الطلب الثابت للهاتف */
+    .fixed-submit-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: 90%;
+      max-width: 400px;
+      padding: 15px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+      animation: danceButton 2s ease-in-out infinite;
+      transition: all 0.3s ease;
+    }
+    
+    .fixed-submit-btn:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 6px 25px rgba(0, 123, 255, 0.4);
+    }
+    
+    @keyframes danceButton {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      25% {
+        transform: translateX(-50%) translateY(-5px) rotate(1deg);
+      }
+      50% {
+        transform: translateX(-50%) translateY(0) rotate(-1deg);
+      }
+      75% {
+        transform: translateX(-50%) translateY(-3px) rotate(0.5deg);
+      }
+    }
+    
     /* مودل التحميل */
     .loading-modal {
       position: fixed;
@@ -270,6 +309,21 @@
         margin: 2px 0;
         font-size: 0.9rem;
       }
+      
+      /* إظهار الزر الثابت على الهاتف */
+      .fixed-submit-btn {
+        display: block !important;
+      }
+      
+      /* إخفاء الزر الأصلي في النموذج على الهاتف */
+      .card .btn-main {
+        display: none;
+      }
+      
+      /* إضافة مساحة في الأسفل لتجنب تداخل الزر الثابت */
+      .card-body {
+        padding-bottom: 100px;
+      }
     }
   </style>
 </head>
@@ -311,6 +365,11 @@
       <button class="btn btn-success" onclick="redirectToIndex()">العودة للصفحة الرئيسية</button>
     </div>
   </div>
+  
+  <!-- زر إرسال الطلب الثابت للهاتف -->
+  <button id="fixed-submit-btn" class="btn btn-main fixed-submit-btn" onclick="submitOrderFromFixedButton()">
+    إرسال الطلب
+  </button>
   
   <footer class="main-footer text-center p-3 mt-5">
     جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
@@ -916,6 +975,14 @@
     // دالة التوجيه إلى الصفحة الرئيسية
     window.redirectToIndex = function() {
       window.location.href = 'index.html';
+    }
+    
+    // دالة إرسال الطلب من الزر الثابت
+    window.submitOrderFromFixedButton = function() {
+      const orderForm = document.getElementById('order-form');
+      if (orderForm) {
+        handleOrderSubmit(orderForm);
+      }
     }
     
     document.addEventListener('DOMContentLoaded', () => {
