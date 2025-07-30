@@ -191,6 +191,32 @@
       width: 100%;
       transform: translateX(0);
       transition: transform 0.3s ease-in-out;
+      animation: mobileButtonDance 2s ease-in-out infinite;
+    }
+    
+    /* تنسيق زر إرسال الطلب للشاشات الكبيرة */
+    .desktop-submit-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      width: auto;
+      max-width: 300px;
+      animation: desktopButtonFloat 3s ease-in-out infinite;
+    }
+    
+    .desktop-submit-btn .modern-submit-btn {
+      padding: 15px 30px;
+      border-radius: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      font-size: 1.1rem;
+      min-width: 200px;
+      transition: all 0.3s ease;
+    }
+    
+    .desktop-submit-btn .modern-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
     
     /* تحريك الزر يميناً ويساراً */
@@ -212,6 +238,11 @@
     /* إضافة padding للصفحة لتجنب تداخل المحتوى مع الزر الثابت */
     .mobile-content-padding {
       padding-bottom: 80px;
+    }
+    
+    /* إضافة padding للشاشات الكبيرة */
+    .desktop-content-padding {
+      padding-bottom: 100px;
     }
     
     /* تنسيق اختيارات الألوان والمقاسات في سطر واحد */
@@ -397,6 +428,707 @@
       box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
       position: relative;
       overflow: hidden;
+    }
+    
+    /* تنسيق الفورم الجديد */
+    .modern-form-container {
+      background: #fff;
+      border-radius: 15px;
+      padding: 18px;
+      margin: 15px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 2px solid;
+      border-image: linear-gradient(45deg, var(--btn-color, #007bff), var(--btn-color, #007bff)) 1;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .modern-form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(45deg, var(--btn-color, #007bff), var(--btn-color, #007bff));
+    }
+    
+    .form-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .form-section-title::before {
+      content: '';
+      width: 3px;
+      height: 16px;
+      background: var(--btn-color, #007bff);
+      border-radius: 2px;
+    }
+    
+    .modern-input-group {
+      margin-bottom: 15px;
+      position: relative;
+    }
+    
+    .modern-input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #555;
+      font-size: 0.9rem;
+    }
+    
+    .modern-input-group .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    
+    .modern-input-group .input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: #666;
+      z-index: 2;
+    }
+    
+    .modern-input-group input,
+    .modern-input-group select {
+      width: 100%;
+      padding: 8px 8px 8px 30px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      background: #fafafa;
+    }
+    
+    .modern-input-group input:focus,
+    .modern-input-group select:focus {
+      outline: none;
+      border-color: var(--btn-color, #007bff);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+    
+    .modern-radio-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .modern-radio-item {
+      flex: 1;
+      position: relative;
+    }
+    
+    .modern-radio-item input[type="radio"] {
+      display: none;
+    }
+    
+    .modern-radio-item label {
+      display: block;
+      padding: 8px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fafafa;
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    
+    .modern-radio-item input[type="radio"]:checked + label {
+      border-color: var(--btn-color, #007bff);
+      background: var(--btn-color, #007bff);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    .modern-color-options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .modern-color-option {
+      position: relative;
+    }
+    
+    .modern-color-option input[type="radio"] {
+      display: none;
+    }
+    
+    .modern-color-option label {
+      display: block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .modern-color-option input[type="radio"]:checked + label {
+      border-color: var(--btn-color, #007bff);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+    
+    .modern-size-options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .modern-size-option {
+      position: relative;
+    }
+    
+    .modern-size-option input[type="radio"] {
+      display: none;
+    }
+    
+    .modern-size-option label {
+      display: block;
+      padding: 7px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fafafa;
+      font-weight: 500;
+      min-width: 40px;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    
+    .modern-size-option input[type="radio"]:checked + label {
+      border-color: var(--btn-color, #007bff);
+      background: var(--btn-color, #007bff);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    .modern-quantity-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+    }
+    
+    .modern-quantity-selector label {
+      font-weight: 500;
+      color: #555;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    
+    .modern-quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: quantityPulse 2s ease-in-out infinite;
+    }
+    
+    .modern-quantity-btn {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--btn-color, #007bff);
+      background: var(--btn-color, #007bff);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    
+    .modern-quantity-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    .modern-quantity-display {
+      width: 50px;
+      height: 32px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      background: #fff;
+    }
+    
+    .modern-summary {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .modern-summary h5 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+    }
+    
+    .modern-summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 0.9rem;
+    }
+    
+    .modern-summary-item:last-child {
+      border-bottom: none;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--btn-color, #007bff);
+    }
+    
+    .modern-submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--btn-color, #007bff);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      animation: buttonDance 2.5s ease-in-out infinite;
+    }
+    
+    .modern-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    }
+    
+    .modern-submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* تحسينات للهواتف */
+    @media (max-width: 767px) {
+      .modern-form-container {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 12px;
+      }
+      
+      .modern-input-group input,
+      .modern-input-group select {
+        padding: 8px 8px 8px 30px;
+        font-size: 0.8rem;
+      }
+      
+      .modern-radio-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .modern-color-options,
+      .modern-size-options {
+        gap: 4px;
+        justify-content: center;
+      }
+      
+      .modern-color-option label {
+        width: 22px;
+        height: 22px;
+      }
+      
+      .modern-size-option label {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        min-width: 30px;
+      }
+      
+      .modern-quantity-selector {
+        padding: 10px;
+      }
+      
+      .modern-quantity-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+      }
+      
+      .modern-quantity-display {
+        width: 45px;
+        height: 28px;
+        font-size: 0.9rem;
+      }
+      
+      .modern-quantity-controls {
+        animation: mobileQuantityPulse 1.5s ease-in-out infinite;
+      }
+      
+      .modern-submit-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+        animation: mobileButtonDance 2s ease-in-out infinite;
+      }
+      
+      .form-section-title {
+        font-size: 0.95rem;
+      }
+      
+      .modern-summary {
+        padding: 12px;
+      }
+      
+      .modern-summary h5 {
+        font-size: 0.9rem;
+      }
+      
+      /* تحسين تنسيق السعر والحالة للهواتف */
+      .mobile-price-status {
+        padding: 10px;
+        margin-bottom: 8px;
+        background: var(--btn-color, #007bff);
+        color: #fff;
+        border: 1px solid var(--btn-color, #007bff);
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: mobilePricePulse 2.5s ease-in-out infinite;
+      }
+      
+      @keyframes mobilePricePulse {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.01);
+        }
+      }
+      
+      .mobile-price-status::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: mobilePriceShine 2.5s ease-in-out infinite;
+      }
+      
+      @keyframes mobilePriceShine {
+        0% {
+          left: -100%;
+        }
+        50% {
+          left: 100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+      
+      .mobile-price-status:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 12px rgba(0, 123, 255, 0.3);
+      }
+      
+      .mobile-price-status:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+      }
+      
+      .mobile-price-status h4 {
+        font-size: 1rem;
+        color: #fff;
+      }
+      
+      .mobile-price-status .badge {
+        font-size: 0.75rem;
+        padding: 5px 8px;
+        background: #fff !important;
+        color: var(--btn-color, #007bff) !important;
+        border: 1px solid #fff;
+      }
+      
+      /* تحسين عرض الحقول في سطر واحد للهواتف */
+      .modern-form-container .row .col-6 {
+        padding: 0 5px;
+      }
+      
+      .modern-form-container .row .col-6:first-child {
+        padding-right: 5px;
+      }
+      
+      .modern-form-container .row .col-6:last-child {
+        padding-left: 5px;
+      }
+      
+      /* إخفاء الزر الثابت للشاشات الكبيرة في الهواتف */
+      .desktop-submit-btn {
+        display: none !important;
+      }
+    }
+    
+    /* تحسينات إضافية للفورم الجديد */
+    .modern-form-container {
+      animation: fadeInUp 0.6s ease-out, formDance 3s ease-in-out infinite;
+    }
+    
+    /* تنسيق السعر والحالة في سطر واحد */
+    .mobile-price-status {
+      background: var(--btn-color, #007bff);
+      color: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--btn-color, #007bff);
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: pricePulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pricePulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+    
+    .mobile-price-status::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: priceShine 3s ease-in-out infinite;
+    }
+    
+    @keyframes priceShine {
+      0% {
+        left: -100%;
+      }
+      50% {
+        left: 100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+    
+    .mobile-price-status:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    
+    .mobile-price-status:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+    }
+    
+    .mobile-price-status h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    
+    .mobile-price-status .badge {
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      background: #fff !important;
+      color: var(--btn-color, #007bff) !important;
+      border: 1px solid #fff;
+    }
+    
+    /* تحسين عرض الحقول في سطر واحد */
+    .modern-form-container .row {
+      margin: 0 -5px;
+    }
+    
+    .modern-form-container .row .col-6 {
+      padding: 0 5px;
+    }
+    
+    /* تحسين للشاشات المتوسطة */
+    @media (max-width: 991px) {
+      .modern-form-container .row .col-6 {
+        padding: 0 3px;
+      }
+      
+      .desktop-submit-btn {
+        bottom: 15px;
+        right: 15px;
+      }
+      
+      .desktop-submit-btn .modern-submit-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+        min-width: 180px;
+      }
+    }
+    
+    /* تحسينات للألوان والمقاسات في سطر واحد */
+    .modern-color-options,
+    .modern-size-options {
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .modern-color-option label {
+      width: 25px;
+      height: 25px;
+    }
+    
+    .modern-size-option label {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      min-width: 35px;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes formDance {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-3px);
+      }
+      75% {
+        transform: translateX(3px);
+      }
+    }
+    
+    @keyframes buttonDance {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      20% {
+        transform: translateX(-2px);
+      }
+      40% {
+        transform: translateX(2px);
+      }
+      60% {
+        transform: translateX(-1px);
+      }
+      80% {
+        transform: translateX(1px);
+      }
+    }
+    
+    @keyframes mobileButtonDance {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-1px);
+      }
+      50% {
+        transform: translateX(1px);
+      }
+      75% {
+        transform: translateX(-0.5px);
+      }
+    }
+    
+    @keyframes quantityPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+    
+    @keyframes mobileQuantityPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.01);
+      }
+    }
+    
+    @keyframes desktopButtonFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    .modern-input-group input:focus,
+    .modern-input-group select:focus {
+      transform: scale(1.02);
+    }
+    
+    .modern-radio-item label:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .modern-color-option label:hover {
+      transform: scale(1.1);
+    }
+    
+    .modern-size-option label:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
     /* تقليل المسافات في العروض الخاصة للهواتف */
@@ -630,6 +1362,8 @@
     import { supabase, createOrder } from './server-superbase.js';
     window.createOrder = createOrder;
     let statesData = [];
+    let offers = [];
+    let productPrice = 0;
     
     // دالة لجلب إعدادات المتجر وتطبيقها
     async function loadStoreSettings() {
@@ -642,6 +1376,9 @@
       if (!error && data) {
         // تطبيق لون الأزرار
         if (data.btncolor) {
+          // تطبيق اللون كمتغير CSS للفورم الجديد
+          document.documentElement.style.setProperty('--btn-color', data.btncolor);
+          
           const style = document.createElement('style');
           style.textContent = `
             .btn-main {
@@ -716,6 +1453,8 @@
       const descr = data.descr || '';
       let offers = [];
       try { offers = data.offers ? JSON.parse(data.offers) : []; } catch(e) { offers = []; }
+      window.offers = offers;
+      window.productPrice = data.price;
       // استرجاع الألوان والقياسات إذا وجدت
       let colors = [];
       let sizes = [];
@@ -758,13 +1497,27 @@
           `</div></div>`;
       }
       document.getElementById('product-details-row').innerHTML = `
-        <!-- عنوان المنتج للهواتف والأجهزة المحمولة -->
-      <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 8px;">
+        <!-- اسم المنتج للهواتف والأجهزة المحمولة -->
+        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 8px;">
           <h1 class="fw-bold fs-1 mb-1" style="font-size: 2.2rem;">${data.name}</h1>
         </div>
         
+        <!-- السعر والحالة في سطر واحد للهواتف -->
+        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 8px;">
+          <div class="mobile-price-status">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h4 class="text-white mb-0">💰 السعر: <span id="product-price">${data.price}</span> دج</h4>
+              </div>
+              <div class="col-4 text-end">
+                ${data.available !== false ? '<span class="badge bg-success">متوفر</span>' : '<span class="badge bg-danger">غير متوفر</span>'}
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <!-- الصور للهواتف والأجهزة المحمولة -->
-        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 6px;">
+        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 8px;">
           <div class="product-images-container">
             <div id="main-image-container" class="main-image-container mb-2">
               <img id="main-product-image" src="${image}" class="img-fluid rounded" alt="صورة المنتج" style="width:100%;height:350px;object-fit:cover;" onerror="this.src='https://via.placeholder.com/500x350'">
@@ -780,20 +1533,8 @@
         </div>
         
         <!-- الوصف للهواتف والأجهزة المحمولة -->
-        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 5px;">
+        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 8px;">
           <p class="text-muted mb-0" style="line-height: 1.3;">${descr}</p>
-        </div>
-        
-        <!-- السعر للهواتف والأجهزة المحمولة -->
-        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 5px;">
-          <h4 class="text-success mb-1">السعر: <span id="product-price">${data.price}</span>دج</h4>
-        </div>
-        
-        <!-- حالة التوفر للهواتف والأجهزة المحمولة -->
-        <div class="col-12 d-md-none mobile-spacing" style="margin-bottom: 5px;">
-          <div class="mb-1">
-            <strong>الحالة:</strong> ${data.available !== false ? '<span class="badge bg-success">متوفر</span>' : '<span class="badge bg-danger">غير متوفر</span>'}
-          </div>
         </div>
         
         <!-- العروض الخاصة للهواتف والأجهزة المحمولة -->
@@ -804,69 +1545,153 @@
         <!-- النموذج للهواتف والأجهزة المحمولة -->
         <div class="col-12 d-md-none mobile-content-padding">
           ${data.available === false ? '<div class="alert alert-warning mobile-spacing">هذا المنتج غير متوفر حالياً</div>' : `
-          <div class="mobile-form-container">
+          <div class="modern-form-container">
             <form id="order-form-mobile" class="mt-3">
-              <div class="mb-2">
-                <label for="fullNameMobile" class="form-label">الاسم الكامل</label>
-                <input type="text" class="form-control" id="fullNameMobile" required>
+              
+              
+              <div class="modern-input-group">
+                <label for="fullNameMobile">الاسم الكامل</label>
+                <div class="input-wrapper">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="fullNameMobile" required>
+                </div>
               </div>
-              <div class="mb-2">
-                <label for="phonenumberMobile" class="form-label">رقم الهاتف </label>
-                <input type="number" class="form-control" id="phonenumberMobile" required>
+              
+              <div class="modern-input-group">
+                <label for="phonenumberMobile">رقم الهاتف</label>
+                <div class="input-wrapper">
+                  <span class="input-icon">📱</span>
+                  <input type="number" id="phonenumberMobile" required>
+                </div>
               </div>
-              <div class="mb-2">
-                <label for="addressMobile" class="form-label">العنوان</label>
-                <input type="text" class="form-control" id="addressMobile" required>
-              </div>
-              <div class="mb-2">
-                <label for="stateMobile" class="form-label">الولاية</label>
-                <select class="form-select" id="stateMobile" required>
-                  <option value="">اختر الولاية</option>
-                </select>
-              </div>
-              <div class="mb-2">
-                <label class="form-label">نوع الشحن</label>
-                <div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="shippingTypeMobile" id="toOfficeMobile" value="office" checked>
-                    <label class="form-check-label" for="toOfficeMobile">إلى المكتب</label>
+              
+              <div class="row">
+                <div class="col-6">
+                  <div class="modern-input-group">
+                    <label for="addressMobile">العنوان</label>
+                    <div class="input-wrapper">
+                      <span class="input-icon">📍</span>
+                      <input type="text" id="addressMobile" required>
+                    </div>
                   </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="shippingTypeMobile" id="toHomeMobile" value="home">
-                    <label class="form-check-label" for="toHomeMobile">إلى باب المنزل</label>
+                </div>
+                <div class="col-6">
+                  <div class="modern-input-group">
+                    <label for="stateMobile">الولاية</label>
+                    <div class="input-wrapper">
+                      <span class="input-icon">🌍</span>
+                      <select id="stateMobile" required>
+                        <option value="">اختر الولاية</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
-              ${offerSelectHtml.replace(/id="offerRadio/g, 'id="offerRadioMobile').replace(/name="offerRadio/g, 'name="offerRadioMobile').replace(/special-offer-radio/g, 'special-offer-radio')}
               
-              <!-- اختيارات الألوان والمقاسات في سطر واحد -->
-              ${colorSelectHtml.replace(/id="colorRadio/g, 'id="colorRadioMobile').replace(/name="colorRadio/g, 'name="colorRadioMobile').replace(/<div class="mb-3">/g, '<div class="mb-2 mobile-section-spacing">').replace(/<div id="color-radio-group">/g, '<div id="color-radio-group" class="mobile-options-row">')}
-              ${sizeSelectHtml.replace(/id="sizeRadio/g, 'id="sizeRadioMobile').replace(/name="sizeRadio/g, 'name="sizeRadioMobile').replace(/<div class="mb-3">/g, '<div class="mb-2 mobile-section-spacing">').replace(/<div id="size-radio-group">/g, '<div id="size-radio-group" class="mobile-options-row">')}
-              
-              <div class="mb-2">
-                <label for="quantityMobile" class="form-label">العدد</label>
-                <input type="number" class="form-control" id="quantityMobile" min="1" value="1" required>
+              <!-- نوع الشحن -->
+              <div class="form-section-title">🚚 نوع الشحن</div>
+              <div class="modern-radio-group">
+                <div class="modern-radio-item">
+                  <input type="radio" name="shippingTypeMobile" id="toOfficeMobile" value="office" checked>
+                  <label for="toOfficeMobile">🏢 إلى المكتب</label>
+                </div>
+                <div class="modern-radio-item">
+                  <input type="radio" name="shippingTypeMobile" id="toHomeMobile" value="home">
+                  <label for="toHomeMobile">🏠 إلى باب المنزل</label>
+                </div>
               </div>
-              <div class="mb-2">
-                <h5 class="mb-2">ملخص الطلبية:</h5>
-                <ul class="list-group">
-                  <li class="list-group-item py-2">سعر المنتج: <span id="summary-product-price-mobile">${data.price}</span> دج</li>
-                  <li class="list-group-item py-2">سعر الشحن: <span id="summary-shipping-price-mobile">0</span> دج</li>
-                  <li class="list-group-item fw-bold py-2">المجموع: <span id="summary-total-mobile">${data.price}</span> دج</li>
-                </ul>
+              
+              <!-- العروض الخاصة -->
+              ${offers.length > 0 ? `
+              <div class="form-section-title">🎉 العروض الخاصة</div>
+              <div class="modern-radio-group">
+                <div class="modern-radio-item">
+                  <input type="radio" name="offerRadioMobile" id="offerRadioNoneMobile" value="" checked>
+                  <label for="offerRadioNoneMobile">💰 بدون عرض خاص (سعر عادي)</label>
+                </div>
+                ${offers.map((o, idx) => `
+                <div class="modern-radio-item">
+                  <input type="radio" name="offerRadioMobile" id="offerRadio${idx}Mobile" value="${idx}">
+                  <label for="offerRadio${idx}Mobile">🎯 ${o.qty} قطعة بـ ${o.price} دج</label>
+                </div>
+                `).join('')}
+              </div>
+              ` : ''}
+              
+              <!-- اختيارات الألوان والمقاسات -->
+              ${colors.length > 0 || sizes.length > 0 ? `
+              <div class="row">
+                ${colors.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">🎨 اختر اللون</div>
+                  <div class="modern-color-options">
+                    ${colors.map((c, idx) => `
+                    <div class="modern-color-option">
+                      <input type="radio" name="colorRadioMobile" id="colorRadio${idx}Mobile" value="${c.name}">
+                      <label for="colorRadio${idx}Mobile" style="background:${c.hex};" title="${c.name}"></label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+                ${sizes.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">📏 اختر المقاس</div>
+                  <div class="modern-size-options">
+                    ${sizes.map((s, idx) => `
+                    <div class="modern-size-option">
+                      <input type="radio" name="sizeRadioMobile" id="sizeRadio${idx}Mobile" value="${s}">
+                      <label for="sizeRadio${idx}Mobile">${s}</label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+              </div>
+              ` : ''}
+              
+              <!-- اختيار الكمية -->
+              <div class="form-section-title">📦 الكمية</div>
+              <div class="modern-quantity-selector">
+                <label>العدد:</label>
+                <div class="modern-quantity-controls">
+                  <button type="button" class="modern-quantity-btn" onclick="changeQuantity('Mobile', -1)">-</button>
+                  <div class="modern-quantity-display" id="quantity-display-mobile">1</div>
+                  <button type="button" class="modern-quantity-btn" onclick="changeQuantity('Mobile', 1)">+</button>
+                </div>
+                <input type="hidden" id="quantityMobile" value="1" required>
+              </div>
+              
+              <!-- ملخص الطلبية -->
+              <div class="modern-summary">
+                <h5>📋 ملخص الطلبية</h5>
+                <div class="modern-summary-item">
+                  <span>سعر المنتج:</span>
+                  <span id="summary-product-price-mobile">${data.price} دج</span>
+                </div>
+                <div class="modern-summary-item">
+                  <span>سعر الشحن:</span>
+                  <span id="summary-shipping-price-mobile">0 دج</span>
+                </div>
+                <div class="modern-summary-item">
+                  <span>المجموع:</span>
+                  <span id="summary-total-mobile">${data.price} دج</span>
+                </div>
               </div>
             </form>
           </div>
           
           <!-- زر إرسال الطلب الثابت -->
           <div class="mobile-submit-btn">
-            <button type="submit" form="order-form-mobile" class="btn btn-main w-100" ${data.available === false ? 'disabled' : ''}>${data.available === false ? 'المنتج غير متوفر' : 'إرسال الطلب'}</button>
+            <button type="submit" form="order-form-mobile" class="modern-submit-btn" ${data.available === false ? 'disabled' : ''}>
+              ${data.available === false ? '❌ المنتج غير متوفر' : '✅ إرسال الطلب'}
+            </button>
           </div>
           `}
         </div>
         
         <!-- للشاشات الكبيرة -->
-        <div class="col-md-6 d-none d-md-block">
+        <div class="col-md-6 d-none d-md-block desktop-content-padding">
           <div class="product-images-container">
             <div id="main-image-container-desktop" class="main-image-container mb-3">
               <img id="main-product-image-desktop" src="${image}" class="img-fluid rounded" alt="صورة المنتج" style="width:100%;height:400px;object-fit:cover;" onerror="this.src='https://via.placeholder.com/500x350'">
@@ -893,55 +1718,152 @@
           </div>
           
           ${data.available === false ? '<div class="alert alert-warning">هذا المنتج غير متوفر حالياً</div>' : `
-          <form id="order-form" class="mt-4">
-            <div class="mb-3">
-              <label for="fullName" class="form-label">الاسم الكامل</label>
-              <input type="text" class="form-control" id="fullName" required>
-            </div>
-            <div class="mb-3">
-              <label for="phonenumber" class="form-label">رقم الهاتف </label>
-              <input type="number" class="form-control" id="phonenumber" required>
-            </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">العنوان</label>
-              <input type="text" class="form-control" id="address" required>
-            </div>
-            <div class="mb-3">
-              <label for="state" class="form-label">الولاية</label>
-              <select class="form-select" id="state" required>
-                <option value="">اختر الولاية</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">نوع الشحن</label>
-              <div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="shippingType" id="toOffice" value="office" checked>
-                  <label class="form-check-label" for="toOffice">إلى المكتب</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="shippingType" id="toHome" value="home">
-                  <label class="form-check-label" for="toHome">إلى باب المنزل</label>
+          <div class="modern-form-container">
+            <form id="order-form" class="mt-4">
+             
+              
+              <div class="modern-input-group">
+                <label for="fullName">الاسم الكامل</label>
+                <div class="input-wrapper">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="fullName" required>
                 </div>
               </div>
-            </div>
-            ${offerSelectHtml}
-            ${colorSelectHtml}
-            ${sizeSelectHtml}
-            <div class="mb-3">
-              <label for="quantity" class="form-label">العدد</label>
-              <input type="number" class="form-control" id="quantity" min="1" value="1" required>
-            </div>
-            <div class="mb-3">
-              <h5>ملخص الطلبية:</h5>
-              <ul class="list-group">
-                <li class="list-group-item">سعر المنتج: <span id="summary-product-price">${data.price}</span> دج</li>
-                <li class="list-group-item">سعر الشحن: <span id="summary-shipping-price">0</span> دج</li>
-                <li class="list-group-item fw-bold">المجموع: <span id="summary-total">${data.price}</span> دج</li>
-              </ul>
-            </div>
-            <button type="submit" class="btn btn-main mt-3 w-100" ${data.available === false ? 'disabled' : ''}>${data.available === false ? 'المنتج غير متوفر' : 'إرسال الطلب'}</button>
-          </form>
+              
+              <div class="modern-input-group">
+                <label for="phonenumber">رقم الهاتف</label>
+                <div class="input-wrapper">
+                  <span class="input-icon">📱</span>
+                  <input type="number" id="phonenumber" required>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-6">
+                  <div class="modern-input-group">
+                    <label for="address">العنوان</label>
+                    <div class="input-wrapper">
+                      <span class="input-icon">📍</span>
+                      <input type="text" id="address" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="modern-input-group">
+                    <label for="state">الولاية</label>
+                    <div class="input-wrapper">
+                      <span class="input-icon">🌍</span>
+                      <select id="state" required>
+                        <option value="">اختر الولاية</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- نوع الشحن -->
+              <div class="form-section-title">🚚 نوع الشحن</div>
+              <div class="modern-radio-group">
+                <div class="modern-radio-item">
+                  <input type="radio" name="shippingType" id="toOffice" value="office" checked>
+                  <label for="toOffice">🏢 إلى المكتب</label>
+                </div>
+                <div class="modern-radio-item">
+                  <input type="radio" name="shippingType" id="toHome" value="home">
+                  <label for="toHome">🏠 إلى باب المنزل</label>
+                </div>
+              </div>
+              
+              <!-- العروض الخاصة -->
+              ${offers.length > 0 ? `
+              <div class="form-section-title">🎉 العروض الخاصة</div>
+              <div class="modern-radio-group">
+                <div class="modern-radio-item">
+                  <input type="radio" name="offerRadio" id="offerRadioNone" value="" checked>
+                  <label for="offerRadioNone">💰 بدون عرض خاص (سعر عادي)</label>
+                </div>
+                ${offers.map((o, idx) => `
+                <div class="modern-radio-item">
+                  <input type="radio" name="offerRadio" id="offerRadio${idx}" value="${idx}">
+                  <label for="offerRadio${idx}">🎯 ${o.qty} قطعة بـ ${o.price} دج</label>
+                </div>
+                `).join('')}
+              </div>
+              ` : ''}
+              
+              <!-- اختيارات الألوان والمقاسات -->
+              ${colors.length > 0 || sizes.length > 0 ? `
+              <div class="row">
+                ${colors.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">🎨 اختر اللون</div>
+                  <div class="modern-color-options">
+                    ${colors.map((c, idx) => `
+                    <div class="modern-color-option">
+                      <input type="radio" name="colorRadio" id="colorRadio${idx}" value="${c.name}">
+                      <label for="colorRadio${idx}" style="background:${c.hex};" title="${c.name}"></label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+                ${sizes.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">📏 اختر المقاس</div>
+                  <div class="modern-size-options">
+                    ${sizes.map((s, idx) => `
+                    <div class="modern-size-option">
+                      <input type="radio" name="sizeRadio" id="sizeRadio${idx}" value="${s}">
+                      <label for="sizeRadio${idx}">${s}</label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+              </div>
+              ` : ''}
+              
+              <!-- اختيار الكمية -->
+              <div class="form-section-title">📦 الكمية</div>
+              <div class="modern-quantity-selector">
+                <label>العدد:</label>
+                <div class="modern-quantity-controls">
+                  <button type="button" class="modern-quantity-btn" onclick="changeQuantity('', -1)">-</button>
+                  <div class="modern-quantity-display" id="quantity-display">1</div>
+                  <button type="button" class="modern-quantity-btn" onclick="changeQuantity('', 1)">+</button>
+                </div>
+                <input type="hidden" id="quantity" value="1" required>
+              </div>
+              
+              <!-- ملخص الطلبية -->
+              <div class="modern-summary">
+                <h5>📋 ملخص الطلبية</h5>
+                <div class="modern-summary-item">
+                  <span>سعر المنتج:</span>
+                  <span id="summary-product-price">${data.price} دج</span>
+                </div>
+                <div class="modern-summary-item">
+                  <span>سعر الشحن:</span>
+                  <span id="summary-shipping-price">0 دج</span>
+                </div>
+                <div class="modern-summary-item">
+                  <span>المجموع:</span>
+                  <span id="summary-total">${data.price} دج</span>
+                </div>
+              </div>
+              
+              <button type="submit" class="modern-submit-btn d-none d-md-block" ${data.available === false ? 'disabled' : ''}>
+                ${data.available === false ? '❌ المنتج غير متوفر' : '🛒 اطلب الآن'}
+              </button>
+            </form>
+          </div>
+          
+          <!-- زر إرسال الطلب الثابت للشاشات الكبيرة -->
+          <div class="desktop-submit-btn">
+            <button type="submit" form="order-form" class="modern-submit-btn" ${data.available === false ? 'disabled' : ''}>
+              ${data.available === false ? '❌ المنتج غير متوفر' : '🛒 اطلب الآن'}
+            </button>
+          </div>
           `}
         </div>
       `;
@@ -1348,8 +2270,9 @@
         const selectedState = statesData.find(s => s.id == currentStateSelect.value);
         const shippingType = Array.from(currentShippingTypeInputs).find(i => i.checked)?.value;
         let quantity = parseInt(currentQuantityInput.value) || 1;
-        let unitPrice = productPrice;
+        let unitPrice = window.productPrice || productPrice;
         let offerIdx = "";
+        let currentOffers = window.offers || offers;
         
         // التحقق من العرض الخاص المختار
         if (currentOfferRadioGroup) {
@@ -1360,13 +2283,17 @@
         }
         
         // إذا تم اختيار عرض خاص
-        if (offerIdx !== "" && offers[offerIdx]) {
-          const offer = offers[offerIdx];
+        if (offerIdx !== "" && currentOffers[offerIdx]) {
+          const offer = currentOffers[offerIdx];
           unitPrice = offer.price / offer.qty;
           // تحديث الكمية لتكون مضاعفة للعرض
           if (quantity < offer.qty) quantity = offer.qty;
           quantity = Math.ceil(quantity / offer.qty) * offer.qty;
           currentQuantityInput.value = quantity;
+          
+          // تحديث عرض الكمية
+          const quantityDisplay = document.getElementById(`quantity-display${isMobile ? '-mobile' : ''}`);
+          if (quantityDisplay) quantityDisplay.textContent = quantity;
         }
         
         // حساب سعر الشحن
@@ -1377,8 +2304,8 @@
         
         // حساب السعر الإجمالي للمنتج
         let totalProduct = 0;
-        if (offerIdx !== "" && offers[offerIdx]) {
-          const offer = offers[offerIdx];
+        if (offerIdx !== "" && currentOffers[offerIdx]) {
+          const offer = currentOffers[offerIdx];
           totalProduct = Math.ceil(quantity / offer.qty) * offer.price;
         } else {
           totalProduct = unitPrice * quantity;
@@ -1391,10 +2318,13 @@
         const summaryShippingPrice = document.getElementById(`summary-shipping-price${prefix}`);
         const summaryTotal = document.getElementById(`summary-total${prefix}`);
         
-        if (summaryProductPrice) summaryProductPrice.textContent = totalProduct;
-        if (summaryShippingPrice) summaryShippingPrice.textContent = shippingPrice;
-        if (summaryTotal) summaryTotal.textContent = total;
+        if (summaryProductPrice) summaryProductPrice.textContent = `${totalProduct} دج`;
+        if (summaryShippingPrice) summaryShippingPrice.textContent = `${shippingPrice} دج`;
+        if (summaryTotal) summaryTotal.textContent = `${total} دج`;
       }
+      
+      // جعل الدالة متاحة عالمياً
+      window.updateSummary = updateSummary;
 
       // إضافة الأحداث للنموذج العادي
       if (stateSelect) stateSelect.addEventListener('change', () => updateSummary(false));
@@ -1402,7 +2332,20 @@
         shippingTypeInputs.forEach(i => i.addEventListener('change', () => updateSummary(false)));
       }
       if (quantityInput) quantityInput.addEventListener('input', () => updateSummary(false));
-      if (offerRadioGroup) offerRadioGroup.addEventListener('change', () => updateSummary(false));
+      
+      // إضافة أحداث للعروض الخاصة
+      const currentOffers = window.offers || offers;
+      if (currentOffers.length > 0) {
+        const offerRadios = document.querySelectorAll('input[name="offerRadio"]');
+        offerRadios.forEach(radio => {
+          radio.addEventListener('change', () => updateSummary(false));
+        });
+        
+        const offerRadiosMobile = document.querySelectorAll('input[name="offerRadioMobile"]');
+        offerRadiosMobile.forEach(radio => {
+          radio.addEventListener('change', () => updateSummary(true));
+        });
+      }
 
       // إضافة الأحداث للنموذج المحمول
       if (stateSelectMobile) stateSelectMobile.addEventListener('change', () => updateSummary(true));
@@ -1410,7 +2353,6 @@
         shippingTypeInputsMobile.forEach(i => i.addEventListener('change', () => updateSummary(true)));
       }
       if (quantityInputMobile) quantityInputMobile.addEventListener('input', () => updateSummary(true));
-      if (offerRadioGroupMobile) offerRadioGroupMobile.addEventListener('change', () => updateSummary(true));
 
       fetchStates().then(() => {
         updateSummary(false);
@@ -1469,6 +2411,29 @@
       // بدء الحركة بعد تحميل الصفحة
       setTimeout(animateButton, 1000);
     }
+    
+    // دالة تغيير الكمية
+    function changeQuantity(suffix, change) {
+      const quantityInput = document.getElementById(`quantity${suffix}`);
+      const quantityDisplay = document.getElementById(`quantity-display${suffix.toLowerCase()}`);
+      
+      if (!quantityInput || !quantityDisplay) return;
+      
+      let currentQuantity = parseInt(quantityInput.value) || 1;
+      let newQuantity = currentQuantity + change;
+      
+      // التأكد من أن الكمية لا تقل عن 1
+      if (newQuantity < 1) newQuantity = 1;
+      
+      quantityInput.value = newQuantity;
+      quantityDisplay.textContent = newQuantity;
+      
+      // تحديث ملخص الطلبية
+      updateSummary(suffix === 'Mobile');
+    }
+    
+    // جعل الدالة متاحة عالمياً
+    window.changeQuantity = changeQuantity;
     
     // دالة التوجيه إلى الصفحة الرئيسية
     function redirectToIndex() {
