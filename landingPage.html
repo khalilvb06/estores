@@ -1066,6 +1066,62 @@
         // تطبيق لون النص
         if (data.textcolor) {
           document.body.style.color = data.textcolor;
+          // تطبيق لون النص على جميع العناصر
+          const style = document.createElement('style');
+          style.textContent = `
+            body, h1, h2, h3, h4, h5, h6, p, span, div, label, input, select, textarea, button, a {
+              color: ${data.textcolor} !important;
+            }
+            .card-title, .card-text, .lead, .text-muted, .form-control, .form-select {
+              color: ${data.textcolor} !important;
+            }
+            .form-section-title, .modern-input-group label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-summary h5, .modern-summary-item {
+              color: ${data.textcolor} !important;
+            }
+            .main-header h1, .main-footer {
+              color: ${data.textcolor} !important;
+            }
+            .special-offer h5, .special-offer .list-group-item {
+              color: ${data.textcolor} !important;
+            }
+            .alert {
+              color: ${data.textcolor} !important;
+            }
+            .btn-main, .modern-submit-btn {
+              color: #fff !important;
+            }
+            .badge {
+              color: inherit !important;
+            }
+            .loading-content p {
+              color: ${data.textcolor} !important;
+            }
+            .modern-quantity-selector label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-quantity-display {
+              color: ${data.textcolor} !important;
+            }
+            .modern-radio-item label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-size-option label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-color-option label {
+              color: ${data.textcolor} !important;
+            }
+            .mobile-price-status h4 {
+              color: #fff !important;
+            }
+            .mobile-price-status .badge {
+              color: var(--btn-color, #007bff) !important;
+            }
+          `;
+          document.head.appendChild(style);
         }
         
         // تطبيق اسم المتجر
