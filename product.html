@@ -2415,19 +2415,18 @@
     // دالة تغيير الكمية
     function changeQuantity(suffix, change) {
       const quantityInput = document.getElementById(`quantity${suffix}`);
-      const quantityDisplay = document.getElementById(`quantity-display${suffix.toLowerCase()}`);
-      
+      // دعم camelCase وkebab-case
+      let quantityDisplay = document.getElementById(`quantity-display${suffix.toLowerCase()}`);
+      if (!quantityDisplay) {
+        // جرب بصيغة kebab-case
+        quantityDisplay = document.getElementById(`quantity-display-${suffix.toLowerCase()}`);
+      }
       if (!quantityInput || !quantityDisplay) return;
-      
       let currentQuantity = parseInt(quantityInput.value) || 1;
       let newQuantity = currentQuantity + change;
-      
-      // التأكد من أن الكمية لا تقل عن 1
       if (newQuantity < 1) newQuantity = 1;
-      
       quantityInput.value = newQuantity;
       quantityDisplay.textContent = newQuantity;
-      
       // تحديث ملخص الطلبية
       updateSummary(suffix === 'Mobile');
     }
