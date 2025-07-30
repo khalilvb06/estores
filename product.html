@@ -1348,7 +1348,7 @@
       </div>
       <h4 class="text-success mb-2">تم إرسال الطلب بنجاح!</h4>
       <p class="text-muted mb-3">سيتم التواصل معك قريباً</p>
-      <button class="btn btn-success" onclick="redirectToIndex()">العودة للصفحة الرئيسية</button>
+      <button class="btn btn-success" onclick="redirectToIndex()" style="transition: background 0.2s, transform 0.2s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">العودة للصفحة الرئيسية</button>
     </div>
   </div>
   
@@ -1400,6 +1400,74 @@
         // تطبيق لون النص
         if (data.textcolor) {
           document.body.style.color = data.textcolor;
+          // تطبيق لون النص على جميع العناصر
+          const style = document.createElement('style');
+          style.textContent = `
+            body, h1, h2, h3, h4, h5, h6, p, span, div, label, input, select, textarea, button, a {
+              color: ${data.textcolor} !important;
+            }
+            .card-title, .card-text, .lead, .text-muted, .form-control, .form-select {
+              color: ${data.textcolor} !important;
+            }
+            .product-title, .product-description, .product-price {
+              color: ${data.textcolor} !important;
+            }
+            .main-header h1, .main-footer {
+              color: ${data.textcolor} !important;
+            }
+            .alert {
+              color: ${data.textcolor} !important;
+            }
+            .btn-main {
+              color: #fff !important;
+            }
+            .badge {
+              color: inherit !important;
+            }
+            .form-section-title, .modern-input-group label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-summary h5, .modern-summary-item {
+              color: ${data.textcolor} !important;
+            }
+            .special-offer h5, .special-offer .list-group-item {
+              color: ${data.textcolor} !important;
+            }
+            .loading-content p {
+              color: ${data.textcolor} !important;
+            }
+            .modern-quantity-selector label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-quantity-display {
+              color: ${data.textcolor} !important;
+            }
+            .modern-radio-item label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-size-option label {
+              color: ${data.textcolor} !important;
+            }
+            .modern-color-option label {
+              color: ${data.textcolor} !important;
+            }
+            .mobile-price-status h4 {
+              color: #fff !important;
+            }
+            .mobile-price-status .badge {
+              color: var(--btn-color, #007bff) !important;
+            }
+            .image-counter {
+              color: #fff !important;
+            }
+            .image-navigation {
+              color: #fff !important;
+            }
+            .image-zoom-btn {
+              color: #fff !important;
+            }
+          `;
+          document.head.appendChild(style);
         }
         
         // تطبيق اسم المتجر
