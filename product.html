@@ -2243,8 +2243,7 @@
       const shippingTypeInputsMobile = document.getElementsByName('shippingTypeMobile');
       const quantityInput = document.getElementById('quantity');
       const quantityInputMobile = document.getElementById('quantityMobile');
-      const offerRadioGroup = document.getElementById('offer-radio-group');
-      const offerRadioGroupMobile = document.getElementById('offer-radio-group-mobile');
+
 
       async function fetchStates() {
         const { data, error } = await supabase
@@ -2264,7 +2263,6 @@
         const currentStateSelect = isMobile ? stateSelectMobile : stateSelect;
         const currentShippingTypeInputs = isMobile ? shippingTypeInputsMobile : shippingTypeInputs;
         const currentQuantityInput = isMobile ? quantityInputMobile : quantityInput;
-        const currentOfferRadioGroup = isMobile ? offerRadioGroupMobile : offerRadioGroup;
         const prefix = isMobile ? '-mobile' : '';
         
         const selectedState = statesData.find(s => s.id == currentStateSelect.value);
@@ -2274,9 +2272,11 @@
         let offerIdx = "";
         let currentOffers = window.offers || offers;
         
-        // التحقق من العرض الخاص المختار
-        if (currentOfferRadioGroup) {
-          const checked = currentOfferRadioGroup.querySelector(`input[name="${isMobile ? 'offerRadioMobile' : 'offerRadio'}"]:checked`);
+        // التحقق من العرض الخاص المختار - البحث في النموذج الحالي
+        const currentForm = isMobile ? document.getElementById('order-form-mobile') : document.getElementById('order-form');
+        if (currentForm) {
+          const offerName = isMobile ? 'offerRadioMobile' : 'offerRadio';
+          const checked = currentForm.querySelector(`input[name="${offerName}"]:checked`);
           if (checked && checked.value !== '') {
             offerIdx = checked.value;
           }
@@ -2291,9 +2291,17 @@
           quantity = Math.ceil(quantity / offer.qty) * offer.qty;
           currentQuantityInput.value = quantity;
           
-          // تحديث عرض الكمية
-          const quantityDisplay = document.getElementById(`quantity-display${isMobile ? '-mobile' : ''}`);
-          if (quantityDisplay) quantityDisplay.textContent = quantity;
+          // تحديث عرض الكمية - دعم camelCase وkebab-case
+          let quantityDisplay = document.getElementById(`quantity-display${isMobile ? 'Mobile' : ''}`);
+          if (!quantityDisplay) {
+            quantityDisplay = document.getElementById(`quantity-display-${isMobile ? 'mobile' : ''}`);
+          }
+          if (quantityDisplay) {
+            quantityDisplay.textContent = quantity;
+            console.log(`تم تحديث الكمية إلى: ${quantity} للعرض الخاص: ${offerIdx}`);
+          } else {
+            console.warn(`لم يتم العثور على عنصر عرض الكمية للـ ${isMobile ? 'mobile' : 'desktop'}`);
+          }
         }
         
         // حساب سعر الشحن
@@ -2307,8 +2315,10 @@
         if (offerIdx !== "" && currentOffers[offerIdx]) {
           const offer = currentOffers[offerIdx];
           totalProduct = Math.ceil(quantity / offer.qty) * offer.price;
+          console.log(`عرض خاص: ${offer.qty} قطعة بـ ${offer.price} دج، الكمية: ${quantity}، السعر الإجمالي: ${totalProduct}`);
         } else {
           totalProduct = unitPrice * quantity;
+          console.log(`سعر عادي: ${unitPrice} × ${quantity} = ${totalProduct}`);
         }
         
         const total = totalProduct + shippingPrice;
@@ -2321,6 +2331,19 @@
         if (summaryProductPrice) summaryProductPrice.textContent = `${totalProduct} دج`;
         if (summaryShippingPrice) summaryShippingPrice.textContent = `${shippingPrice} دج`;
         if (summaryTotal) summaryTotal.textContent = `${total} دج`;
+        
+        console.log(`ملخص الطلبية ${isMobile ? 'المحمول' : 'العادي'}:`, {
+          offerIdx,
+          quantity,
+          totalProduct,
+          shippingPrice,
+          total
+        });
+        
+        // تحقق من تحديث الأسعار
+        if (!summaryProductPrice || !summaryShippingPrice || !summaryTotal) {
+          console.warn(`لم يتم العثور على عناصر ملخص الطلبية للـ ${isMobile ? 'mobile' : 'desktop'}`);
+        }
       }
       
       // جعل الدالة متاحة عالمياً
@@ -2336,15 +2359,23 @@
       // إضافة أحداث للعروض الخاصة
       const currentOffers = window.offers || offers;
       if (currentOffers.length > 0) {
-        const offerRadios = document.querySelectorAll('input[name="offerRadio"]');
-        offerRadios.forEach(radio => {
-          radio.addEventListener('change', () => updateSummary(false));
-        });
+        // إضافة أحداث للعروض الخاصة في النموذج العادي
+        const orderForm = document.getElementById('order-form');
+        if (orderForm) {
+          const offerRadios = orderForm.querySelectorAll('input[name="offerRadio"]');
+          offerRadios.forEach(radio => {
+            radio.addEventListener('change', () => updateSummary(false));
+          });
+        }
         
-        const offerRadiosMobile = document.querySelectorAll('input[name="offerRadioMobile"]');
-        offerRadiosMobile.forEach(radio => {
-          radio.addEventListener('change', () => updateSummary(true));
-        });
+        // إضافة أحداث للعروض الخاصة في النموذج المحمول
+        const orderFormMobile = document.getElementById('order-form-mobile');
+        if (orderFormMobile) {
+          const offerRadiosMobile = orderFormMobile.querySelectorAll('input[name="offerRadioMobile"]');
+          offerRadiosMobile.forEach(radio => {
+            radio.addEventListener('change', () => updateSummary(true));
+          });
+        }
       }
 
       // إضافة الأحداث للنموذج المحمول
@@ -2429,6 +2460,7 @@
       quantityDisplay.textContent = newQuantity;
       // تحديث ملخص الطلبية
       updateSummary(suffix === 'Mobile');
+      console.log(`تم تغيير الكمية إلى: ${newQuantity} في ${suffix === 'Mobile' ? 'الهاتف' : 'الشاشة الكبيرة'}`);
     }
     
     // جعل الدالة متاحة عالمياً
