@@ -35,20 +35,76 @@ async function saveSettings() {
         throw new Error('حجم الملف كبير جداً. الحد الأقصى 5MB');
       }
 
+      // جلب الصورة القديمة لحذفها
+      try {
+        const { data: oldSettings } = await supabase
+          .from('store_settings')
+          .select('logo')
+          .eq('id', 1)
+          .single();
+        
+                 if (oldSettings && oldSettings.logo) {
+           // استخراج اسم الملف من الرابط
+           const oldLogoUrl = oldSettings.logo;
+           const urlParts = oldLogoUrl.split('/');
+           const oldFileName = urlParts[urlParts.length - 1];
+           const fullOldPath = `logo/${oldFileName}`;
+           
+           console.log('حذف الصورة القديمة:', fullOldPath);
+           
+           const { error: deleteError } = await supabase.storage
+             .from('product-images')
+             .remove([fullOldPath]);
+          
+          if (deleteError) {
+            console.warn('فشل في حذف الصورة القديمة:', deleteError);
+          } else {
+            console.log('تم حذف الصورة القديمة بنجاح');
+          }
+        }
+      } catch (error) {
+        console.warn('خطأ في حذف الصورة القديمة:', error);
+      }
+
+             // إنشاء اسم فريد للملف باستخدام اسم الملف الأصلي مع timestamp
+       const timestamp = Date.now();
+       const fileExtension = file.name.split('.').pop().toLowerCase();
+       const originalName = file.name.replace(`.${fileExtension}`, '');
+       const fileName = `logo/${timestamp}_${originalName}.${fileExtension}`;
+       console.log('رفع الملف:', fileName);
+       console.log('اسم الملف الأصلي:', file.name);
+       console.log('امتداد الملف:', fileExtension);
+
       const { data, error } = await supabase.storage
         .from('product-images')
-        .upload(`logos/${Date.now()}_${file.name}`, file, { upsert: true });
+        .upload(fileName, file, { upsert: true });
 
       if (error) {
+        console.error('خطأ في رفع الملف:', error);
         throw new Error('خطأ أثناء رفع الصورة: ' + error.message);
       }
+
+      console.log('تم رفع الملف بنجاح:', data);
+      console.log('اسم الملف المحفوظ في Storage:', fileName);
 
       const { data: publicUrlData } = supabase
         .storage
         .from('product-images')
-        .getPublicUrl(`logos/${Date.now()}_${file.name}`);
+        .getPublicUrl(fileName);
 
-      logoUrl = publicUrlData.publicUrl;
+             logoUrl = publicUrlData.publicUrl;
+       console.log('رابط الصورة العام:', logoUrl);
+       console.log('اسم الملف المحفوظ:', fileName);
+       
+       // التحقق من أن الرابط العام صحيح
+       if (!logoUrl || !logoUrl.includes('supabase.co')) {
+         throw new Error('فشل في الحصول على رابط الصورة العام');
+       }
+       
+       // التحقق من أن الرابط يحتوي على المسار الصحيح
+       if (!logoUrl.includes('/logo/')) {
+         console.warn('تحذير: الرابط لا يحتوي على المسار المطلوب /logo/');
+       }
     }
 
     const updateData = {
@@ -58,21 +114,107 @@ async function saveSettings() {
       textcolor: textcolor || '#000000'
     };
 
-    if (logoUrl) {
-      updateData.logo = logoUrl;
-    }
+         if (logoUrl) {
+       // التحقق من صحة رابط الصورة
+       try {
+         const url = new URL(logoUrl);
+         if (url.hostname.includes('supabase.co') && url.pathname.includes('/storage/') && url.pathname.includes('/logo/')) {
+           updateData.logo = logoUrl;
+           console.log('إضافة رابط الصورة للبيانات:', logoUrl);
+         } else {
+           console.warn('رابط الصورة غير صالح:', logoUrl);
+           throw new Error('رابط الصورة غير صالح - يجب أن يحتوي على /logo/ في المسار');
+         }
+       } catch (error) {
+         console.error('خطأ في التحقق من رابط الصورة:', error);
+         throw new Error('رابط الصورة غير صالح');
+       }
+     }
 
-    const { error: updateError } = await supabase
+    console.log('بيانات التحديث:', updateData);
+
+    // محاولة التحديث أولاً
+    let result = await supabase
       .from('store_settings')
       .update(updateData)
       .eq('id', 1);
 
-    if (updateError) {
-      throw new Error('حدث خطأ أثناء الحفظ: ' + updateError.message);
+    // إذا فشل التحديث، جرب الإدراج
+    if (result.error && result.error.code === 'PGRST116') {
+      console.log('السجل غير موجود، جاري إنشاء سجل جديد...');
+      result = await supabase
+        .from('store_settings')
+        .insert([{ id: 1, ...updateData }]);
+    }
+    
+    console.log('نتيجة عملية الحفظ:', result);
+
+    if (result.error) {
+      console.error('خطأ في حفظ البيانات:', result.error);
+      
+      // رسائل خطأ أكثر تفصيلاً
+      let errorMessage = 'حدث خطأ أثناء الحفظ';
+      if (result.error.message) {
+        errorMessage += ': ' + result.error.message;
+      }
+      
+      // إذا كان الخطأ يتعلق بالجدول غير الموجود
+      if (result.error.code === '42P01') {
+        errorMessage = 'جدول الإعدادات غير موجود. يرجى إنشاء الجدول أولاً.';
+      }
+      
+      throw new Error(errorMessage);
     }
 
+    console.log('تم حفظ البيانات بنجاح:', result.data);
+    
+         // التحقق من أن البيانات تم حفظها بشكل صحيح
+     if (result.data && result.data.length > 0) {
+       const savedData = result.data[0];
+       console.log('البيانات المحفوظة:', savedData);
+       
+       if (logoUrl && savedData.logo) {
+         console.log('رابط الصورة المحفوظ:', savedData.logo);
+         console.log('رابط الصورة الأصلي:', logoUrl);
+         
+         if (savedData.logo !== logoUrl) {
+           console.warn('تحذير: رابط الصورة المحفوظ يختلف عن الرابط الأصلي');
+           console.warn('الرابط المحفوظ:', savedData.logo);
+           console.warn('الرابط الأصلي:', logoUrl);
+           
+           // محاولة تحديث الرابط إذا كان مختلفاً
+           try {
+             const updateResult = await supabase
+               .from('store_settings')
+               .update({ logo: logoUrl })
+               .eq('id', 1);
+             
+             if (updateResult.error) {
+               console.error('فشل في تحديث رابط الصورة:', updateResult.error);
+             } else {
+               console.log('✓ تم تحديث رابط الصورة بنجاح');
+             }
+           } catch (error) {
+             console.error('خطأ في تحديث رابط الصورة:', error);
+           }
+         } else {
+           console.log('✓ رابط الصورة محفوظ بشكل صحيح');
+         }
+       }
+     }
+    
     // إظهار رسالة النجاح
     showSuccessMessage();
+    
+    // التحقق من صحة البيانات المحفوظة
+    setTimeout(async () => {
+      const isValid = await validateSavedData();
+      if (!isValid) {
+        console.warn('تحذير: البيانات المحفوظة قد تحتوي على أخطاء');
+      } else {
+        console.log('✓ تم التحقق من صحة البيانات المحفوظة');
+      }
+    }, 1000);
     
   } catch (error) {
     console.error('خطأ في حفظ الإعدادات:', error);
@@ -139,6 +281,11 @@ function previewLogo(input) {
     const previewElement = document.getElementById('logo-preview');
     if (previewElement) {
       previewElement.src = e.target.result;
+      previewElement.style.display = 'block';
+      console.log('تم تحميل معاينة الصورة');
+      console.log('اسم الملف:', file.name);
+      console.log('نوع الملف:', file.type);
+      console.log('حجم الملف:', file.size, 'bytes');
     }
   };
   reader.readAsDataURL(file);
@@ -182,6 +329,8 @@ function removeButtonStyles() {
 // دالة لجلب البيانات السابقة وتعبئة الفورم
 async function loadSettings() {
   try {
+    console.log('بدء تحميل الإعدادات...');
+    
     const { data, error } = await supabase
       .from('store_settings')
       .select('*')
@@ -198,6 +347,8 @@ async function loadSettings() {
       return;
     }
 
+    console.log('تم جلب الإعدادات:', data);
+
     // تعبئة النموذج بالبيانات
     const nameElement = document.getElementById('store-name');
     const headerColorElement = document.getElementById('main-header');
@@ -210,9 +361,20 @@ async function loadSettings() {
     if (btnColorElement) btnColorElement.value = data.btncolor || '';
     if (textColorElement) textColorElement.value = data.textcolor || '';
     
-    if (logoPreviewElement && data.logo) {
-      logoPreviewElement.src = data.logo;
-    }
+         if (logoPreviewElement && data.logo) {
+       console.log('تحميل رابط الصورة:', data.logo);
+       // التحقق من أن الرابط يحتوي على المسار الصحيح
+       if (data.logo.includes('/logo/')) {
+         logoPreviewElement.src = data.logo;
+         logoPreviewElement.style.display = 'block';
+         console.log('تم تحميل الصورة بنجاح من المسار الصحيح');
+       } else {
+         console.warn('رابط الصورة لا يحتوي على المسار المطلوب /logo/');
+         logoPreviewElement.style.display = 'none';
+       }
+     } else if (logoPreviewElement) {
+       logoPreviewElement.style.display = 'none';
+     }
     
     // تطبيق لون الأزرار
     if (data.btncolor) {
@@ -237,6 +399,49 @@ async function loadSettings() {
     }
   } catch (error) {
     console.error('خطأ في تحميل الإعدادات:', error);
+  }
+}
+
+// دالة للتحقق من صحة البيانات المحفوظة
+async function validateSavedData() {
+  try {
+    const { data, error } = await supabase
+      .from('store_settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+
+    if (error || !data) {
+      console.error('فشل في التحقق من البيانات المحفوظة:', error);
+      return false;
+    }
+
+    console.log('البيانات المحفوظة للتحقق:', data);
+    
+    // التحقق من رابط الصورة
+    if (data.logo) {
+      if (!data.logo.includes('/logo/')) {
+        console.warn('رابط الصورة لا يحتوي على المسار المطلوب /logo/');
+        return false;
+      }
+      
+      // التحقق من أن الرابط صالح
+      try {
+        const url = new URL(data.logo);
+        if (!url.hostname.includes('supabase.co')) {
+          console.warn('رابط الصورة لا يحتوي على supabase.co');
+          return false;
+        }
+      } catch (error) {
+        console.warn('رابط الصورة غير صالح:', error);
+        return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    console.error('خطأ في التحقق من البيانات المحفوظة:', error);
+    return false;
   }
 }
 
