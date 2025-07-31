@@ -51,6 +51,15 @@
       overflow: hidden;
       border-radius: 18px 18px 0 0;
       border-bottom: 1px solid #eee;
+      position: relative;
+    }
+    
+    /* تحسين الصور للهواتف */
+    @media (max-width: 576px) {
+      .product-image-wrapper {
+        border-radius: 15px 15px 0 0;
+        aspect-ratio: 3/2;
+      }
     }
 
     .card-img-top {
@@ -225,17 +234,98 @@
       .container {
         max-width: 1140px;
       }
+      
+      /* تحسين البطاقات للشاشات الكبيرة */
+      .card {
+        margin-bottom: 2rem;
+      }
+      
+      .card-title {
+        font-size: 1.2rem;
+      }
+      
+      .card-text {
+        font-size: 1rem;
+        min-height: 50px;
+      }
+    }
+    
+    /* تحسينات للشاشات الكبيرة جداً */
+    @media (min-width: 1400px) {
+      .container {
+        max-width: 1320px;
+      }
+      
+      .card {
+        margin-bottom: 2.5rem;
+      }
+      
+      .card-title {
+        font-size: 1.3rem;
+      }
+      
+      .card-text {
+        font-size: 1.1rem;
+        min-height: 55px;
+      }
+      
+      .welcome-section {
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+      }
+      
+      .welcome-section h2 {
+        font-size: 2rem;
+      }
+      
+      .welcome-section p {
+        font-size: 1.2rem;
+      }
     }
 
     @media (max-width: 1200px) {
       .container {
         max-width: 960px;
       }
+      
+      /* تحسين البطاقات للشاشات المتوسطة */
+      .card {
+        margin-bottom: 1.5rem;
+      }
+      
+      .card-title {
+        font-size: 1.1rem;
+      }
+      
+      .card-text {
+        font-size: 0.95rem;
+      }
     }
 
     @media (max-width: 992px) {
       .container {
         max-width: 720px;
+      }
+      
+      /* تحسين البادينغ للشاشات الكبيرة */
+      body {
+        padding-top: 5px;
+        padding-bottom: 10px;
+      }
+      
+      .container {
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+      
+      .main-header {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      
+      .main-footer {
+        margin-left: 20px;
+        margin-right: 20px;
       }
     }
 
@@ -244,8 +334,34 @@
         max-width: 540px;
       }
 
+      /* تحسين البادينغ للشاشات المتوسطة */
+      body {
+        padding-top: 8px;
+        padding-bottom: 15px;
+      }
+      
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      
+      .main-header {
+        margin-left: 15px;
+        margin-right: 15px;
+        border-radius: 15px;
+      }
+      
+      .main-footer {
+        margin-left: 15px;
+        margin-right: 15px;
+        border-radius: 15px;
+      }
+
       .welcome-section {
-        padding: 1.5rem 0.5rem;
+        padding: 1.5rem 1rem;
+        margin-left: 15px;
+        margin-right: 15px;
+        border-radius: 15px;
       }
 
       .welcome-section h2 {
@@ -294,85 +410,137 @@
     @media (max-width: 576px) {
       .container {
         max-width: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+
+      /* تحسين البادينغ للصفحة الرئيسية */
+      body {
+        padding-top: 10px;
+        padding-bottom: 20px;
       }
 
       .welcome-section {
-        padding: 1rem 0.5rem;
-        margin-bottom: 1.5rem;
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+        border-radius: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
       }
 
       .welcome-section h2 {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
       }
 
       .welcome-section p {
-        font-size: 0.9rem;
+        font-size: 1rem;
+        line-height: 1.4;
       }
 
       .main-header, .main-footer {
         border-radius: 0;
         font-size: 0.95rem;
-      }
-
-      .card-title {
-        font-size: 0.9rem;
-        line-height: 1.2;
-      }
-
-      .card-text {
-        font-size: 0.8rem;
-        min-height: 40px;
-      }
-
-      .card .btn-main {
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
-      }
-
-      .col-12 {
-        flex: 0 0 50%;
-        max-width: 50%;
-      }
-
-      .card {
-        margin-bottom: 0.5rem;
-        border-radius: 12px;
-      }
-
-      #store-logo {
-        width: 35px !important;
-        height: 35px !important;
-      }
-
-      #store-name {
-        font-size: 1rem !important;
-      }
-
-      .header-search .form-control {
-        min-width: 80px;
-        max-width: 120px;
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0 6px 6px 0 !important;
-      }
-
-      .header-search .input-group-text {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.4rem;
-        flex-shrink: 0;
-        border-radius: 6px 0 0 6px !important;
-      }
-
-      .header-search .input-group-sm {
-        height: 32px;
+        margin-left: 10px;
+        margin-right: 10px;
       }
 
       .main-header {
-        padding: 0.5rem 1rem !important;
+        padding: 1rem 1.2rem !important;
+        margin-bottom: 1rem;
+        border-radius: 15px;
+      }
+
+      .main-footer {
+        padding: 1rem 1.2rem !important;
+        margin-top: 2rem;
+        border-radius: 15px;
+      }
+
+      /* تحسين البطاقات */
+      .card {
+        margin-bottom: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+      }
+      
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      }
+      
+      .card-body {
+        padding: 1rem 0.8rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+        line-height: 1.3;
+        padding: 0 0.5rem;
+      }
+
+      .card-text {
+        font-size: 0.9rem;
+        min-height: 45px;
+        padding: 0 0.5rem;
+        line-height: 1.4;
+      }
+
+      .card .btn-main {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+        margin: 0.5rem;
+        border-radius: 20px;
+      }
+
+      /* تحسين الشبكة */
+      .col-12 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 0 0.5rem;
+      }
+
+      .row {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+      }
+
+      #store-logo {
+        width: 40px !important;
+        height: 40px !important;
+      }
+
+      #store-name {
+        font-size: 1.2rem !important;
+        font-weight: 600;
+      }
+
+      /* تحسين البحث */
+      .header-search .form-control {
+        min-width: 100px;
+        max-width: 140px;
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: 0 8px 8px 0 !important;
+        height: 36px;
+      }
+
+      .header-search .input-group-text {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.5rem;
+        flex-shrink: 0;
+        border-radius: 8px 0 0 8px !important;
+        height: 36px;
+      }
+
+      .header-search .input-group-sm {
+        height: 36px;
+      }
+
+      .main-header {
         flex-direction: row-reverse !important;
-        gap: 0.5rem;
+        gap: 0.8rem;
         align-items: center;
       }
 
@@ -391,13 +559,13 @@
 
       .header-search .input-group {
         width: auto;
-        max-width: 150px;
+        max-width: 160px;
       }
 
       .header-search .form-control {
         min-width: 0;
         flex: 1;
-        width: 80px;
+        width: 100px;
       }
 
       .mini-filter-section {
@@ -440,7 +608,7 @@
     
     <div class="header-search">
       <div class="input-group input-group-sm">
-        <input type="text" id="search-input" class="form-control form-control-sm" placeholder="ابحث عن منتج..." style="border-radius: 6px; font-size: 0.85rem; min-width: 200px; padding-right: 40px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzZjNzU3ZCIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPSJNMTEuNzQyIDEwLjM0NGE2LjUgNi41IDAgMSAwLTEuMzk3IDEuMzk4aC0uMDAxYy4wMy4wNC4wNjIuMDc4LjA5OC4xMTVsMy44NSAzLjg1YTEgMSAwIDAgMCAxLjQxNS0xLjQxNGwtMy44NS0zLjg1YTEuMDA3IDEuMDA3IDAgMCAwLS4xMTUtLjF6TTEyIDYuNWE1LjUgNS41IDAgMSAxLTExIDAgNS41IDUuNSAwIDAgMSAxMSAweiIvPjwvc3ZnPg=='); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;">
+        <input type="text" id="search-input" class="form-control form-control-sm" placeholder="ابحث عن منتج..." style="border-radius: 6px; font-size: 0.85rem; min-width: 137px; padding-right: 40px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzZjNzU3ZCIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPSJNMTEuNzQyIDEwLjM0NGE2LjUgNi41IDAgMSAwLTEuMzk3IDEuMzk4aC0uMDAxYy4wMy4wNC4wNjIuMDc4LjA5OC4xMTVsMy44NSAzLjg1YTEgMSAwIDAgMCAxLjQxNS0xLjQxNGwtMy44NS0zLjg1YTEuMDA3IDEuMDA3IDAgMCAwLS4xMTUtLjF6TTEyIDYuNWE1LjUgNS41IDAgMSAxLTExIDAgNS41IDUuNSAwIDAgMSAxMSAweiIvPjwvc3ZnPg=='); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;">
       </div>
     </div>
   </header>
