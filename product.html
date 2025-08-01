@@ -1961,7 +1961,38 @@
           ${data.available === false ? '<div class="alert alert-warning mobile-spacing">هذا المنتج غير متوفر حالياً</div>' : `
           <div class="modern-form-container">
             <form id="order-form-mobile" class="mt-3">
-              
+               <!-- اختيارات الألوان والمقاسات -->
+              ${colors.length > 0 || sizes.length > 0 ? `
+              <div class="row">
+                ${colors.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">🎨 اختر اللون</div>
+                  <div class="modern-color-options">
+                    ${colors.map((c, idx) => `
+                    <div class="modern-color-option">
+                      <input type="radio" name="colorRadioMobile" id="colorRadio${idx}Mobile" value="${c.name}">
+                      <label for="colorRadio${idx}Mobile" style="background:${c.hex};" title="${c.name}"></label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+                ${sizes.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">📏 اختر المقاس</div>
+                  <div class="modern-size-options">
+                    ${sizes.map((s, idx) => `
+                    <div class="modern-size-option">
+                      <input type="radio" name="sizeRadioMobile" id="sizeRadio${idx}Mobile" value="${s}">
+                      <label for="sizeRadio${idx}Mobile">${s}</label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+              </div>
+              ` : ''}
+             
               
               <div class="modern-input-group">
                 <label for="fullNameMobile">الاسم الكامل</label>
@@ -2032,37 +2063,6 @@
               </div>
               ` : ''}
               
-              <!-- اختيارات الألوان والمقاسات -->
-              ${colors.length > 0 || sizes.length > 0 ? `
-              <div class="row">
-                ${colors.length > 0 ? `
-                <div class="col-6">
-                  <div class="form-section-title">🎨 اختر اللون</div>
-                  <div class="modern-color-options">
-                    ${colors.map((c, idx) => `
-                    <div class="modern-color-option">
-                      <input type="radio" name="colorRadioMobile" id="colorRadio${idx}Mobile" value="${c.name}">
-                      <label for="colorRadio${idx}Mobile" style="background:${c.hex};" title="${c.name}"></label>
-                    </div>
-                    `).join('')}
-                  </div>
-                </div>
-                ` : ''}
-                ${sizes.length > 0 ? `
-                <div class="col-6">
-                  <div class="form-section-title">📏 اختر المقاس</div>
-                  <div class="modern-size-options">
-                    ${sizes.map((s, idx) => `
-                    <div class="modern-size-option">
-                      <input type="radio" name="sizeRadioMobile" id="sizeRadio${idx}Mobile" value="${s}">
-                      <label for="sizeRadio${idx}Mobile">${s}</label>
-                    </div>
-                    `).join('')}
-                  </div>
-                </div>
-                ` : ''}
-              </div>
-              ` : ''}
               
               <!-- اختيار الكمية -->
               <div class="form-section-title">📦 الكمية</div>
@@ -2136,6 +2136,38 @@
             <form id="order-form" class="mt-4">
              
               
+             <!-- اختيارات الألوان والمقاسات -->
+              ${colors.length > 0 || sizes.length > 0 ? `
+              <div class="row">
+                ${colors.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">🎨 اختر اللون</div>
+                  <div class="modern-color-options">
+                    ${colors.map((c, idx) => `
+                    <div class="modern-color-option">
+                      <input type="radio" name="colorRadio" id="colorRadio${idx}" value="${c.name}">
+                      <label for="colorRadio${idx}" style="background:${c.hex};" title="${c.name}"></label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+                ${sizes.length > 0 ? `
+                <div class="col-6">
+                  <div class="form-section-title">📏 اختر المقاس</div>
+                  <div class="modern-size-options">
+                    ${sizes.map((s, idx) => `
+                    <div class="modern-size-option">
+                      <input type="radio" name="sizeRadio" id="sizeRadio${idx}" value="${s}">
+                      <label for="sizeRadio${idx}">${s}</label>
+                    </div>
+                    `).join('')}
+                  </div>
+                </div>
+                ` : ''}
+              </div>
+              ` : ''}
+              
               <div class="modern-input-group">
                 <label for="fullName">الاسم الكامل</label>
                 <div class="input-wrapper">
@@ -2205,37 +2237,6 @@
               </div>
               ` : ''}
               
-              <!-- اختيارات الألوان والمقاسات -->
-              ${colors.length > 0 || sizes.length > 0 ? `
-              <div class="row">
-                ${colors.length > 0 ? `
-                <div class="col-6">
-                  <div class="form-section-title">🎨 اختر اللون</div>
-                  <div class="modern-color-options">
-                    ${colors.map((c, idx) => `
-                    <div class="modern-color-option">
-                      <input type="radio" name="colorRadio" id="colorRadio${idx}" value="${c.name}">
-                      <label for="colorRadio${idx}" style="background:${c.hex};" title="${c.name}"></label>
-                    </div>
-                    `).join('')}
-                  </div>
-                </div>
-                ` : ''}
-                ${sizes.length > 0 ? `
-                <div class="col-6">
-                  <div class="form-section-title">📏 اختر المقاس</div>
-                  <div class="modern-size-options">
-                    ${sizes.map((s, idx) => `
-                    <div class="modern-size-option">
-                      <input type="radio" name="sizeRadio" id="sizeRadio${idx}" value="${s}">
-                      <label for="sizeRadio${idx}">${s}</label>
-                    </div>
-                    `).join('')}
-                  </div>
-                </div>
-                ` : ''}
-              </div>
-              ` : ''}
               
               <!-- اختيار الكمية -->
               <div class="form-section-title">📦 الكمية</div>
