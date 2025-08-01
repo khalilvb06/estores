@@ -6,9 +6,95 @@
   <title>متجري</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
     /* Base Styles */
+    body {
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 400;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 600;
+    }
+    
+    /* تطبيق خط Cairo على جميع العناصر */
+    * {
+      font-family: 'Cairo', sans-serif !important;
+    }
+    
+    /* تطبيق خط Cairo على عناصر النموذج */
+    input, select, textarea, button, label, .form-control, .form-select {
+      font-family: 'Cairo', sans-serif !important;
+    }
+    
+    /* تطبيق خط Cairo على النصوص والعناوين */
+    p, span, div, a, .card-title, .card-text, .section-title, .section-subtitle {
+      font-family: 'Cairo', sans-serif !important;
+    }
+    
+    /* تطبيق خط Cairo على جميع الأجهزة */
+    @media (max-width: 767px) {
+      * {
+        font-family: 'Cairo', sans-serif !important;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      * {
+        font-family: 'Cairo', sans-serif !important;
+      }
+    }
+    
+    .section-title {
+      font-size: 2.8rem !important;
+      font-weight: 800;
+      color: #2c3e50;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      display: inline-block;
+      margin-bottom: 15px;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 8px;
+    }
+    
+    /* Responsive font sizes for section title */
+    @media (max-width: 576px) {
+      .section-title {
+        font-size: 1.8rem !important;
+      }
+    }
+    
+    @media (min-width: 577px) and (max-width: 768px) {
+      .section-title {
+        font-size: 2.2rem !important;
+      }
+    }
+    
+    @media (min-width: 769px) and (max-width: 992px) {
+      .section-title {
+        font-size: 2.5rem !important;
+      }
+    }
+    
+    @media (min-width: 993px) and (max-width: 1200px) {
+      .section-title {
+        font-size: 2.7rem !important;
+      }
+    }
+    
+    @media (min-width: 1201px) {
+      .section-title {
+        font-size: 2.8rem !important;
+      }
+    }
     .btn-main {
       background: #007bff;
       color: #fff;
@@ -413,6 +499,22 @@
         padding-left: 15px;
         padding-right: 15px;
       }
+      
+      .section-title {
+        font-size: 1.6rem !important;
+        white-space: normal;
+        line-height: 1.3;
+      }
+      
+      .title-underline {
+        bottom: -6px !important;
+        height: 2px !important;
+      }
+      
+      .section-title {
+        border-bottom: 2px solid #007bff !important;
+        padding-bottom: 6px !important;
+      }
 
       /* تحسين البادينغ للصفحة الرئيسية */
       body {
@@ -516,10 +618,10 @@
         font-weight: 600;
       }
 
-      /* تحسين البحث */
+      /* تحسين البحث - للهواتف فقط */
       .header-search .form-control {
-        min-width: 100px;
-        max-width: 140px;
+        min-width: 140px;
+        max-width: 200px;
         font-size: 0.8rem;
         padding: 0.4rem 0.6rem;
         border-radius: 0 8px 8px 0 !important;
@@ -555,17 +657,18 @@
         min-width: 0;
         display: flex;
         justify-content: flex-end;
+        margin-right: 15px;
       }
 
       .header-search .input-group {
         width: auto;
-        max-width: 160px;
+        max-width: 220px;
       }
 
       .header-search .form-control {
         min-width: 0;
         flex: 1;
-        width: 100px;
+        width: 140px;
       }
 
       .mini-filter-section {
@@ -614,37 +717,12 @@
   </header>
 
   <main class="container py-5">
-    <div class="container py-4">
-      <div class="hero-section p-4 mb-4 text-center" style="background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-        <h1 style="color: #2c3e50; font-weight: bold; margin-bottom: 20px;"><i class="fas fa-store me-2" style="color: #3498db;"></i> مرحباً بك في <span id="main-store-name">متجرنا الإلكتروني</span></h1>
-        <p class="lead" style="color: #7f8c8d; font-size: 1.2rem; margin-bottom: 30px;">تسوق أفضل المنتجات بأفضل الأسعار مع خدمة التوصيل لـ 58 ولاية</p>
-        <div class="row mt-4">
-          <div class="col-md-4">
-            <div class="text-center p-3" style="background: #f8f9fa; border-radius: 10px; margin: 10px;">
-              <i class="fas fa-shipping-fast fa-2x mb-2" style="color: #e74c3c;"></i>
-              <h5 style="color: #2c3e50; font-weight: bold;">توصيل لـ 58 ولاية</h5>
-              <p class="text-muted">توصيل سريع و مضمون</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="text-center p-3" style="background: #f8f9fa; border-radius: 10px; margin: 10px;">
-              <i class="fas fa-shield-alt fa-2x mb-2" style="color: #27ae60;"></i>
-              <h5 style="color: #2c3e50; font-weight: bold;">ضمان الجودة</h5>
-              <p class="text-muted">منتجات عالية الجودة مضمونة</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="text-center p-3" style="background: #f8f9fa; border-radius: 10px; margin: 10px;">
-              <i class="fas fa-headset fa-2x mb-2" style="color: #f39c12;"></i>
-              <h5 style="color: #2c3e50; font-weight: bold;">دعم العملاء</h5>
-              <p class="text-muted">خدمة عملاء متاحة على مدار الساعة</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-
-
+    <div class="section-heading-content text-center mb-3">
+      <h1 class="section-title">
+        منتجاتنا أصلية و ذات جودة عالية
+      </h1>
+      <p class="section-subtitle" style="color: #6c757d; font-size: 1.4rem; font-weight: 400; margin-top: 15px;">تصفح قائمة المنتجات الأكثر رواجا</p>
+    </div>
     <h2 class="mb-4">المنتجات المميزة</h2>
     
     <!-- فلترة مصغرة أعلى المنتجات -->
@@ -728,6 +806,12 @@
               background: ${data.btncolor} !important;
               color: #fff !important;
               opacity: 0.9;
+            }
+            .title-underline {
+              background: ${data.btncolor} !important;
+            }
+            .section-title {
+              border-bottom: 3px solid ${data.btncolor} !important;
             }
             .hero-section {
               background: ${data.btncolor} !important;
