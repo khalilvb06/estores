@@ -454,6 +454,7 @@
       margin-bottom: 15px;
       border-bottom: 3px solid #007bff;
       padding-bottom: 8px;
+      scroll-margin-top: 120px; /* إضافة مسافة للتمرير */
     }
     
     /* Responsive font sizes for section title */
@@ -587,7 +588,7 @@
 
     .main-footer {
       font-size: 1rem;
-      color: #555;
+      color: #000000;
     }
 
     .container {
@@ -614,16 +615,21 @@
       box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
     }
 
-    .mini-filter-section .form-select {
-      transition: all 0.3s ease;
-      font-size: 0.85rem;
-    }
+          .mini-filter-section .form-select {
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+      }
 
-    .mini-filter-section #clear-filters {
-      transition: all 0.3s ease;
-      border: 2px solid #6c757d;
-      font-size: 0.8rem;
-    }
+      .mini-filter-section #category-filter {
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+      }
+
+      .mini-filter-section #clear-filters {
+        transition: all 0.3s ease;
+        border: 2px solid #6c757d;
+        font-size: 0.8rem;
+      }
 
     .mini-filter-section #clear-filters:hover {
       background: #6c757d;
@@ -705,6 +711,39 @@
       50% {
         transform: scale(1.05);
         box-shadow: 0 8px 25px rgba(0,123,255,0.2);
+      }
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+
+    
+    /* تحسين تأثير البطاقات عند الفلترة */
+    .card.category-selected {
+      animation: categorySelectPulse 0.6s ease-out;
+    }
+    
+    @keyframes categorySelectPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      }
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 12px 30px rgba(33,150,243,0.3);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
       }
     }
 
@@ -851,6 +890,7 @@
       }
 
       .mini-filter-section .form-select,
+      .mini-filter-section #category-filter,
       .mini-filter-section #clear-filters {
         font-size: 0.8rem;
       }
@@ -970,6 +1010,7 @@
       }
 
       .mini-filter-section .form-select,
+      .mini-filter-section #category-filter,
       .mini-filter-section #clear-filters {
         font-size: 0.75rem;
       }
@@ -1014,7 +1055,7 @@
     <!-- روابط التنقل -->
     <nav class="nav-links">
       <a href="index.html">الرئيسية</a>
-      <a href="category.html">التصنيفات</a>
+      <a href="#categories-section" onclick="scrollToCategories(); return false;">التصنيفات</a>
     </nav>
 
     <!-- زر القائمة للهواتف -->
@@ -1058,7 +1099,7 @@
     </div>
     <ul class="sidebar-nav">
       <li><a href="index.html"><i class="bi bi-house-door"></i> الرئيسية</a></li>
-      <li><a href="category.html"><i class="bi bi-grid"></i> التصنيفات</a></li>
+      <li><a href="#categories-section" onclick="scrollToCategories(); closeSidebar(); return false;"><i class="bi bi-grid"></i> التصنيفات</a></li>
     </ul>
   </div>
 
@@ -1074,8 +1115,14 @@
     <!-- فلترة مصغرة أعلى المنتجات -->
     <div class="mini-filter-section mb-3 p-2 rounded" style="background: #f8f9fa; border: 1px solid #e9ecef;">
       <div class="row align-items-center g-2">
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <input type="text" id="search-input" class="form-control form-control-sm" placeholder="ابحث عن منتج..." style="font-size: 0.85rem; display: none;">
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <select id="category-filter" class="form-select form-select-sm" style="font-size: 0.85rem;">
+            <option value="">جميع التصنيفات</option>
+            <!-- سيتم تعبئة التصنيفات ديناميكياً -->
+          </select>
+        </div>
+        
+        <div class="col-lg-2 col-md-3 col-sm-6">
           <select id="price-filter" class="form-select form-select-sm" style="font-size: 0.85rem;">
             <option value="">جميع الأسعار</option>
             <option value="0-1000">أقل من 1000 دج</option>
@@ -1085,7 +1132,7 @@
           </select>
         </div>
         
-        <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="col-lg-2 col-md-3 col-sm-6">
           <select id="sort-filter" class="form-select form-select-sm" style="font-size: 0.85rem;">
             <option value="newest">الأحدث</option>
             <option value="oldest">الأقدم</option>
@@ -1102,7 +1149,7 @@
           </button>
         </div>
         
-        <div class="col-lg-4 col-md-2 col-sm-2">
+        <div class="col-lg-4 col-md-1 col-sm-2">
           <div class="search-results" id="search-results" style="display: none;">
             <small class="text-muted"><i class="fas fa-chart-bar"></i> <span id="results-count">تم العثور على <strong>0</strong> منتج</span></small>
           </div>
@@ -1113,15 +1160,20 @@
     <div class="row g-4" id="products-list">
       <!-- سيتم تعبئة المنتجات ديناميكياً -->
     </div>
+
+    <h1 class="section-title" id="categories-section">
+      التصنيفات
+    </h1>
+    <div class="row g-4" id="categories-list">
+      <!-- سيتم تعبئة المنتجات ديناميكياً -->
+    </div>
   </main>
 
-  <footer class="main-footer p-3 mt-5">
-
-      <div class="mt-2 text-center">
-        جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
-      </div>
+  <footer class="main-footer p-3 mt-5"
+          style="color: #000 !important; background: #fff; padding: 1rem 1.2rem; margin: 2rem 10px 0 10px; border-radius: 0 0 18px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); font-size: 1rem; text-align: center;">
+    <div class="mt-2 text-center">
+      جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
     </div>
-    
   </footer>
   
   
@@ -1336,6 +1388,35 @@
     window.openSearchModal = openSearchModal;
     window.closeSearchModal = closeSearchModal;
     window.performModalSearch = performModalSearch;
+    window.filterByCategory = filterByCategory;
+    window.scrollToCategories = scrollToCategories;
+    
+    // دالة التمرير إلى قسم التصنيفات
+    function scrollToCategories() {
+      const categoriesSection = document.getElementById('categories-section');
+      if (categoriesSection) {
+        const headerHeight = document.querySelector('.main-header').offsetHeight;
+        const topBannerHeight = document.querySelector('.top-banner').offsetHeight;
+        const totalOffset = headerHeight + topBannerHeight + 20; // إضافة 20px للمسافة
+        
+        const elementPosition = categoriesSection.offsetTop - totalOffset;
+        
+        window.scrollTo({
+          top: elementPosition,
+          behavior: 'smooth'
+        });
+        
+        // إضافة تأثير بصري للعنوان
+        setTimeout(() => {
+          categoriesSection.style.transform = 'scale(1.05)';
+          categoriesSection.style.color = '#007bff';
+          setTimeout(() => {
+            categoriesSection.style.transform = 'scale(1)';
+            categoriesSection.style.color = '#2c3e50';
+          }, 500);
+        }, 300);
+      }
+    }
 
     async function loadProducts() {
       const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
@@ -1408,49 +1489,152 @@
       updateSearchResults();
     }
 
+    // تعريف المتغيرات العامة للتصنيفات
+    let allCategories = [];
+    let filteredCategories = [];
+
+    // دالة لجلب التصنيفات من قاعدة البيانات
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('id, name, image_url')
+        .order('id', { ascending: false });
+
+      const container = document.getElementById('categories-list');
+      if (error) {
+        container.innerHTML = '<div class="alert alert-danger">حدث خطأ أثناء جلب التصنيفات</div>';
+        return;
+      }
+
+      allCategories = data || [];
+      filteredCategories = [...allCategories];
+      displayCategories();
+      
+      // تعبئة فلتر التصنيفات
+      populateCategoryFilter();
+    }
+    
+    // دالة لتعبئة فلتر التصنيفات
+    function populateCategoryFilter() {
+      const categoryFilter = document.getElementById('category-filter');
+      if (!categoryFilter) return;
+      
+      // إضافة خيار "جميع التصنيفات"
+      categoryFilter.innerHTML = '<option value="">جميع التصنيفات</option>';
+      
+      // إضافة التصنيفات
+      allCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.id;
+        option.textContent = category.name;
+        categoryFilter.appendChild(option);
+      });
+    }
+
+    // دالة لعرض التصنيفات على شكل كروت
+    function displayCategories(categories = filteredCategories) {
+      const container = document.getElementById('categories-list');
+      container.innerHTML = '';
+
+      if (!categories || categories.length === 0) {
+        container.innerHTML = '<div class="alert alert-info">لا توجد تصنيفات</div>';
+        return;
+      }
+
+      categories.forEach(category => {
+        container.innerHTML += `
+          <div class="col-lg-4 col-md-6 col-sm-6 col-6 d-flex align-items-stretch">
+            <div class="card h-100 w-100" style="cursor: pointer;" onclick="filterByCategory(${category.id}, '${category.name}')">
+              <div class="product-image-wrapper">
+                <img src="${category.image_url ? category.image_url : 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${category.name}" onerror="this.src='https://via.placeholder.com/300x200'">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">${category.name}</h5>
+                <button class="btn btn-main mt-2" onclick="event.stopPropagation(); filterByCategory(${category.id}, '${category.name}')">تصفح التصنيف</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
     function setupSearchAndFilter() {
       const searchInput = document.getElementById('search-modal-input');
+      const categoryFilter = document.getElementById('category-filter');
       const priceFilter = document.getElementById('price-filter');
       const sortFilter = document.getElementById('sort-filter');
       const clearFilters = document.getElementById('clear-filters');
 
       // البحث بالاسم
-      searchInput.addEventListener('input', debounce(filterProducts, 300));
+      if (searchInput) {
+        searchInput.addEventListener('input', debounce(filterProducts, 300));
+      }
+
+      // فلترة بالتصنيف
+      if (categoryFilter) {
+        categoryFilter.addEventListener('change', () => {
+          // إضافة تأثير بصري عند تغيير التصنيف
+          categoryFilter.style.transform = 'scale(1.05)';
+          setTimeout(() => {
+            categoryFilter.style.transform = 'scale(1)';
+          }, 200);
+          
+          filterProducts();
+        });
+      }
 
       // فلترة بالسعر
-      priceFilter.addEventListener('change', filterProducts);
+      if (priceFilter) {
+        priceFilter.addEventListener('change', filterProducts);
+      }
 
       // الترتيب
-      sortFilter.addEventListener('change', filterProducts);
+      if (sortFilter) {
+        sortFilter.addEventListener('change', filterProducts);
+      }
 
       // إعادة تعيين الفلاتر
-      clearFilters.addEventListener('click', () => {
-        searchInput.value = '';
-        priceFilter.value = '';
-        sortFilter.value = 'newest';
-        filteredProducts = [...allProducts];
-        displayProducts();
-        document.getElementById('search-results').style.display = 'none';
-        
-        // إضافة تأثير بصري لإعادة التعيين
-        clearFilters.style.transform = 'rotate(360deg)';
-        setTimeout(() => {
-          clearFilters.style.transform = 'rotate(0deg)';
-        }, 300);
-      });
+      if (clearFilters) {
+        clearFilters.addEventListener('click', () => {
+          if (searchInput) searchInput.value = '';
+          if (categoryFilter) categoryFilter.value = '';
+          if (priceFilter) priceFilter.value = '';
+          if (sortFilter) sortFilter.value = 'newest';
+          filteredProducts = [...allProducts];
+          displayProducts();
+          const searchResults = document.getElementById('search-results');
+          if (searchResults) searchResults.style.display = 'none';
+          
+          // إضافة تأثير بصري لإعادة التعيين
+          clearFilters.style.transform = 'rotate(360deg)';
+          setTimeout(() => {
+            clearFilters.style.transform = 'rotate(0deg)';
+          }, 300);
+        });
+      }
     }
 
     function filterProducts() {
-      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const searchInput = document.getElementById('search-input');
+      const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+      const categoryId = document.getElementById('category-filter').value;
       const priceRange = document.getElementById('price-filter').value;
       const sortBy = document.getElementById('sort-filter').value;
 
       // فلترة بالاسم
       let filtered = allProducts.filter(product => {
+        if (!searchTerm) return true;
         const nameMatch = product.name.toLowerCase().includes(searchTerm);
         const descMatch = product.descr ? product.descr.toLowerCase().includes(searchTerm) : false;
         return nameMatch || descMatch;
       });
+
+      // فلترة بالتصنيف
+      if (categoryId) {
+        filtered = filtered.filter(product => {
+          return product.category_id == categoryId;
+        });
+      }
 
       // فلترة بالسعر
       if (priceRange) {
@@ -1489,17 +1673,34 @@
 
       // إظهار نتائج البحث
       const searchResults = document.getElementById('search-results');
-      if (searchTerm || priceRange) {
-        searchResults.style.display = 'block';
-      } else {
-        searchResults.style.display = 'none';
+      if (searchResults) {
+        if (searchTerm || categoryId || priceRange) {
+          searchResults.style.display = 'block';
+        } else {
+          searchResults.style.display = 'none';
+        }
       }
     }
 
     function updateSearchResults() {
       const resultsCount = document.getElementById('results-count');
+      if (!resultsCount) return;
+      
       const count = filteredProducts.length;
-      resultsCount.innerHTML = `تم العثور على <strong>${count}</strong> منتج`;
+      const categoryFilter = document.getElementById('category-filter');
+      const categoryId = categoryFilter ? categoryFilter.value : '';
+      
+      let resultText = `تم العثور على <strong>${count}</strong> منتج`;
+      
+      // إضافة اسم التصنيف إذا كان محدداً
+      if (categoryId) {
+        const selectedCategory = allCategories.find(cat => cat.id == categoryId);
+        if (selectedCategory) {
+          resultText = `تم العثور على <strong>${count}</strong> منتج في تصنيف <strong>${selectedCategory.name}</strong>`;
+        }
+      }
+      
+      resultsCount.innerHTML = resultText;
     }
 
     function debounce(func, wait) {
@@ -1514,6 +1715,60 @@
       };
     }
     
+    // دالة فلترة المنتجات حسب التصنيف
+    function filterByCategory(categoryId, categoryName) {
+      // تحديث فلتر التصنيف
+      const categoryFilter = document.getElementById('category-filter');
+      if (categoryFilter) {
+        categoryFilter.value = categoryId;
+      }
+      
+      // إعادة تعيين باقي الفلاتر
+      const priceFilter = document.getElementById('price-filter');
+      const sortFilter = document.getElementById('sort-filter');
+      const searchInput = document.getElementById('search-modal-input');
+      
+      if (priceFilter) priceFilter.value = '';
+      if (sortFilter) sortFilter.value = 'newest';
+      if (searchInput) searchInput.value = '';
+      
+      // تطبيق الفلترة
+      filterProducts();
+      
+      // التمرير إلى قسم المنتجات
+      const productsSection = document.getElementById('products-list');
+      if (productsSection) {
+        productsSection.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+      
+      // إضافة تأثير بصري للبطاقة المحددة
+      const categoryCards = document.querySelectorAll('.card');
+      categoryCards.forEach(card => {
+        card.classList.remove('category-selected');
+        card.style.transform = 'scale(1)';
+        card.style.boxShadow = '0 2px 10px rgba(0,0,0,0.04)';
+      });
+      
+      // إضافة تأثير للبطاقة المحددة
+      const selectedCard = event ? event.target.closest('.card') : null;
+      if (selectedCard) {
+        selectedCard.classList.add('category-selected');
+        setTimeout(() => {
+          selectedCard.classList.remove('category-selected');
+        }, 600);
+      }
+      
+
+    }
+    
+
+    
+
+    
+
 
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1532,6 +1787,7 @@
       
       loadStoreSettings();
       loadProducts();
+      loadCategories();
     });
   </script>
 </body>
