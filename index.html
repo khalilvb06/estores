@@ -513,7 +513,9 @@
       border: none;
     }
 
-    .card:hover {
+    .card:hover,
+    .card:active,
+    .card:focus {
       transform: translateY(-5px) scale(1.02);
       box-shadow: 0 4px 18px rgba(0,123,255,0.10);
     }
@@ -1017,7 +1019,7 @@
 
     <!-- زر القائمة للهواتف -->
     <button class="menu-btn" onclick="toggleSidebar()">
-      <i class="bi bi-list"></i> القائمة
+      <i class="bi bi-list"></i>
     </button>
 
     <!-- قسم البحث -->
@@ -1526,7 +1528,7 @@
         if (loadingModal) {
           loadingModal.style.display = 'none';
         }
-      }, 1500);
+      }, 3000);
       
       loadStoreSettings();
       loadProducts();
