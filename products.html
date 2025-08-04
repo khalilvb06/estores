@@ -495,6 +495,79 @@
         }
       }
     }
+    
+            /* Global padding improvements for all screen sizes */
+        body {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .main-navbar {
+            margin-left: -10px;
+            margin-right: -10px;
+            margin-top: -10px;
+        }
+        
+        .main-footer {
+            background: black !important;
+            color: rgb(255, 255, 255) !important;
+            border-radius: 25px 25px 0 0;
+            box-shadow: 0 -4px 20px rgba(102,126,234,0.08);
+        }
+    
+    .main-header {
+      margin-left: 5px;
+      margin-right: 5px;
+      border-radius: 8px;
+    }
+    
+    /* Container padding improvements */
+    .container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    
+    /* Mobile responsive padding improvements */
+    @media (max-width: 576px) {
+      body {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      
+      .container {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      
+      .main-navbar {
+        margin-left: -12px;
+        margin-right: -12px;
+        margin-top: -12px;
+      }
+      
+      .main-header {
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      
+      .container {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      
+      .main-navbar {
+        margin-left: -10px;
+        margin-right: -10px;
+        margin-top: -10px;
+      }
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -517,6 +590,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="addLandingPage.html"><span>📄</span> صفحات الهبوط</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="categories.html"><span>🏷️</span> التصنيفات</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="orders.html"><span>🛒</span> الطلبات</a>
@@ -564,6 +640,14 @@
           <div class="mb-3">
             <label class="form-label">وصف المنتج</label>
             <textarea class="form-control" id="productDesc" rows="3" placeholder="أدخل وصف المنتج"></textarea>
+          </div>
+          <!-- التصنيف -->
+          <div class="mb-3">
+            <label class="form-label">التصنيف</label>
+            <select class="form-select" id="productCategory" required>
+              <option value="">اختر التصنيف</option>
+              <!-- سيتم ملء التصنيفات بواسطة JavaScript -->
+            </select>
           </div>
           <!-- صورة -->
           <div class="mb-3">
@@ -652,6 +736,7 @@
               <tr>
                 <th>الصورة</th>
                 <th>اسم المنتج</th>
+                <th>التصنيف</th>
                 <th>السعر</th>
                 <th>التوفر</th>
                 <th>المزيد</th>
@@ -707,13 +792,19 @@
       </div>
     </div>
   </main>
-  <footer class="main-footer text-center p-3 mt-5">
-    جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
+  <footer class="main-footer text-center py-3 mt-5">
+    <div class="container">
+      <p class="mb-0">
+        <i class="fas fa-heart text-danger me-1"></i>
+        جميع الحقوق محفوظة © 2024 متجر إلكتروني
+      </p>
+    </div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="server-superbase.js"></script>
       <script type="module" src="auth-guard.js"></script>
     <script type="module" src="products.js"></script>
+    
                   <script type="module" src="logout.js"></script>
 </body>
 </html>
