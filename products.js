@@ -6,6 +6,7 @@ import { protectAdminPages } from './auth-guard.js';
   const offers = [];
   const productImages = []; // مصفوفة للصور المضافة
   let products = [];
+  let categories = []; // مصفوفة التصنيفات
   let editProductId = null; // معرف المنتج الجاري تعديله
   let modalCurrentImageIndex = 0; // مؤشر الصورة الحالية في المودال
   let modalProductImages = []; // مصفوفة صور المنتج في المودال
@@ -88,6 +89,50 @@ import { protectAdminPages } from './auth-guard.js';
   function deleteProductImage(index) {
     productImages.splice(index, 1);
     renderProductImages();
+  }
+
+  // دالة تحميل التصنيفات
+  async function loadCategories() {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('name');
+      
+      if (error) {
+        console.error('خطأ في تحميل التصنيفات:', error);
+        return;
+      }
+      
+      categories = data || [];
+      renderCategories();
+    } catch (error) {
+      console.error('خطأ في تحميل التصنيفات:', error);
+    }
+  }
+
+  // دالة عرض التصنيفات في القائمة المنسدلة
+  function renderCategories() {
+    const categorySelect = document.getElementById('productCategory');
+    if (!categorySelect) return;
+    
+    // حفظ القيمة المحددة حالياً
+    const currentValue = categorySelect.value;
+    
+    // إعادة ملء القائمة
+    categorySelect.innerHTML = '<option value="">اختر التصنيف</option>';
+    
+    categories.forEach(category => {
+      const option = document.createElement('option');
+      option.value = category.id;
+      option.textContent = category.name;
+      categorySelect.appendChild(option);
+    });
+    
+    // إعادة تحديد القيمة السابقة إذا كانت موجودة
+    if (currentValue) {
+      categorySelect.value = currentValue;
+    }
   }
 
   function addColor() {
@@ -173,20 +218,34 @@ import { protectAdminPages } from './auth-guard.js';
   async function publishProduct() {
     const name = document.getElementById('productName').value.trim();
     const descr = document.getElementById('productDesc').value.trim();
-    const price = document.getElementById('price').value;
+    const categoryId = document.getElementById('productCategory').value;
+    const price = parseFloat(document.getElementById('price').value) || 0;
     const available = document.getElementById('productAvailable').checked;
     
     if (editProductId) {
+      // التحقق من صحة البيانات قبل التعديل
+      if (!name || !price || price <= 0) {
+        alert('يرجى إدخال اسم المنتج وسعر صحيح');
+        return;
+      }
+      
+      // التحقق من صحة معرف التصنيف إذا تم تحديده
+      if (categoryId && isNaN(parseInt(categoryId))) {
+        alert('يرجى اختيار تصنيف صحيح');
+        return;
+      }
+      
       // تعديل المنتج
       const updateObj = {
         name,
         descr,
+        category_id: categoryId ? parseInt(categoryId) : null,
         price,
         available,
         colors: JSON.stringify(colors),
         sizes: JSON.stringify(sizes),
         offers: JSON.stringify(offers),
-        pixel: document.getElementById('pixelSelect').value
+        pixel: document.getElementById('pixelSelect').value ? parseInt(document.getElementById('pixelSelect').value) : null
       };
       
       // معالجة الصور عند التعديل
@@ -275,8 +334,14 @@ import { protectAdminPages } from './auth-guard.js';
         }
       }
       
-      if (!name || !price) {
-        alert('يرجى إدخال اسم المنتج والسعر');
+      if (!name || !price || price <= 0) {
+        alert('يرجى إدخال اسم المنتج وسعر صحيح');
+        return;
+      }
+      
+      // التحقق من صحة معرف التصنيف إذا تم تحديده
+      if (categoryId && isNaN(parseInt(categoryId))) {
+        alert('يرجى اختيار تصنيف صحيح');
         return;
       }
       
@@ -284,13 +349,14 @@ import { protectAdminPages } from './auth-guard.js';
         {
           name,
           descr,
+          category_id: categoryId ? parseInt(categoryId) : null,
           price,
           available,
           image: imageUrls.length > 0 ? JSON.stringify(imageUrls) : '',
           colors: JSON.stringify(colors),
           sizes: JSON.stringify(sizes),
           offers: JSON.stringify(offers),
-          pixel: document.getElementById('pixelSelect').value
+          pixel: document.getElementById('pixelSelect').value ? parseInt(document.getElementById('pixelSelect').value) : null
         }
       ]);
       if (insertError) {
@@ -303,6 +369,7 @@ import { protectAdminPages } from './auth-guard.js';
     // إعادة تعيين النموذج
     document.getElementById('productName').value = '';
     document.getElementById('productDesc').value = '';
+    document.getElementById('productCategory').value = '';
     document.getElementById('price').value = '';
     document.getElementById('productAvailable').checked = true;
     document.getElementById('productImage').value = '';
@@ -324,7 +391,17 @@ import { protectAdminPages } from './auth-guard.js';
 
   // جلب المنتجات من supabase
   async function fetchProductsFromSupabase() {
-    const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        categories (
+          id,
+          name
+        )
+      `)
+      .order('id', { ascending: false });
+    
     if (!error && data) {
       products = data.map(p => {
         let images = [];
@@ -342,6 +419,7 @@ import { protectAdminPages } from './auth-guard.js';
           sizes: p.sizes ? JSON.parse(p.sizes) : [],
           offers: p.offers ? JSON.parse(p.offers) : [],
           images: images,
+          category_name: p.categories ? p.categories.name : null
         };
       });
       renderProductsTable();
@@ -389,6 +467,7 @@ import { protectAdminPages } from './auth-guard.js';
                  onerror="this.src='https://via.placeholder.com/40'">
           </td>
           <td>${product.name}</td>
+          <td>${product.category_name || 'غير محدد'}</td>
           <td>${product.price}</td>
           <td>
             ${availabilityBadge}
@@ -756,9 +835,10 @@ import { protectAdminPages } from './auth-guard.js';
     const product = products[idx];
     document.getElementById('productName').value = product.name;
     document.getElementById('productDesc').value = product.descr;
+    document.getElementById('productCategory').value = product.category_id || '';
     document.getElementById('price').value = product.price;
     document.getElementById('productAvailable').checked = product.available !== false;
-    document.getElementById('pixelSelect').value = product.pixel;
+    document.getElementById('pixelSelect').value = product.pixel || '';
     colors.length = 0; sizes.length = 0; offers.length = 0; productImages.length = 0;
     if (product.colors) product.colors.forEach(c => colors.push({...c}));
     if (product.sizes) product.sizes.forEach(s => sizes.push(s));
@@ -828,6 +908,7 @@ import { protectAdminPages } from './auth-guard.js';
       if (addProductFormWrapper) addProductFormWrapper.style.display = 'none';
       fetchProductsFromSupabase();
       fetchPixels();
+      loadCategories(); // تحميل التصنيفات
     } else {
       console.log('فشل في المصادقة، لن يتم تحميل البيانات');
     }
