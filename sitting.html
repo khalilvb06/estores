@@ -159,18 +159,29 @@
           <div class="mb-3">
             <label for="store-logo" class="form-label">شعار المتجر</label>
             <input type="file" class="form-control" id="store-logo" accept="image/*" onchange="previewLogo(this)">
-            <img id="logo-preview" src="" alt="معاينة الشعار" class="mt-2" style="max-width:80px; max-height:80px; display:block;">
+            <img id="logo-preview" src="" alt="معاينة الشعار" class="mt-2" style="max-width:80px; max-height:80px; display:none; border-radius: 8px; border: 2px solid #e0e7ff;">
           </div>
           <div class="mb-3">
             <label for="main-header" class="form-label">لون الهيدر والفوتر</label>
             <input type="color" class="form-control form-control-color" id="main-header" value="#007bff">
           </div>
           <div class="mb-3">
-            <label for="main-btn" class="form-label">لون الأزرار</label>
+            <label for="main-btn" class="form-label">لون خلفية الأزرار</label>
             <input type="color" class="form-control form-control-color" id="main-btn" value="#007bff" onchange="updateButtonColor()">
           </div>
           <div class="mb-3">
-            <label for="main-text" class="form-label">لون الكتابة</label>
+            <label for="main-btn-text" class="form-label">لون كتابة الأزرار</label>
+            <input type="color" class="form-control form-control-color" id="main-btn-text" value="#ffffff" onchange="updateButtonColor()">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">معاينة الأزرار</label>
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="btn btn-main" style="pointer-events: none;">زر تجريبي</button>
+              <button class="btn btn-main" style="pointer-events: none;">زر آخر</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="main-text" class="form-label">لون النصوص العامة</label>
             <input type="color" class="form-control form-control-color" id="main-text" value="#222222">
           </div>
           <div class="text-center">
@@ -206,12 +217,33 @@
     </div>
   </div>
 
+  <!-- مودل خطأ -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="mb-3">
+            <span style="font-size: 4rem;">❌</span>
+          </div>
+          <h5 class="modal-title" id="errorModalLabel">حدث خطأ!</h5>
+          <p class="text-muted mt-2 error-message">حدث خطأ أثناء حفظ الإعدادات</p>
+        </div>
+        <div class="modal-footer border-0 justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">حسناً</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script type="module" src="server-superbase.js"></script>
       <script type="module" src="auth-guard.js"></script>
     <script type="module" src="settings.js"></script>
-                  <script type="module" src="logout.js"></script>
+   <script type="module" src="logout.js"></script>
   
 </body>
 </html> 
