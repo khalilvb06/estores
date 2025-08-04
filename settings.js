@@ -6,18 +6,26 @@ async function saveSettings() {
     const nameElement = document.getElementById('store-name');
     const headerColorElement = document.getElementById('main-header');
     const btnColorElement = document.getElementById('main-btn');
+    const btnTextColorElement = document.getElementById('main-btn-text');
     const textColorElement = document.getElementById('main-text');
     const logoInput = document.getElementById('store-logo');
 
     // التحقق من وجود العناصر
-    if (!nameElement || !headerColorElement || !btnColorElement || !textColorElement) {
+    if (!nameElement || !headerColorElement || !btnColorElement || !btnTextColorElement || !textColorElement) {
       throw new Error('عناصر النموذج غير موجودة');
     }
 
     const name = nameElement.value;
     const headercolor = headerColorElement.value;
     const btncolor = btnColorElement.value;
+    const btnTextColor = btnTextColorElement.value;
     const textcolor = textColorElement.value;
+
+    // إنشاء كائن JSONB للأزرار
+    const buttonColors = {
+      backgroundColor: btncolor || '#007bff',
+      textColor: btnTextColor || '#ffffff'
+    };
 
     let logoUrl = null;
     
@@ -110,7 +118,7 @@ async function saveSettings() {
     const updateData = {
       name: name.trim(),
       headercolor: headercolor || '#007bff',
-      btncolor: btncolor || '#007bff',
+      btncolor: buttonColors, // الآن JSONB object مع لون الخلفية ولون النص
       textcolor: textcolor || '#000000'
     };
 
@@ -294,9 +302,11 @@ function previewLogo(input) {
 // دالة لتحديث لون الأزرار مباشرة عند تغيير اللون
 function updateButtonColor() {
   const btnColorElement = document.getElementById('main-btn');
-  if (!btnColorElement) return;
+  const btnTextColorElement = document.getElementById('main-btn-text');
+  if (!btnColorElement || !btnTextColorElement) return;
 
   const btnColor = btnColorElement.value || '#007bff';
+  const btnTextColor = btnTextColorElement.value || '#ffffff';
   
   // إزالة الأنماط السابقة
   removeButtonStyles();
@@ -307,14 +317,14 @@ function updateButtonColor() {
   style.textContent = `
     .btn-main {
       background: ${btnColor} !important;
-      color: #fff !important;
+      color: ${btnTextColor} !important;
       border-radius: 25px;
       font-weight: bold;
       transition: background 0.2s;
     }
     .btn-main:hover {
       background: ${btnColor} !important;
-      color: #fff !important;
+      color: ${btnTextColor} !important;
       opacity: 0.9;
     }
   `;
@@ -353,12 +363,33 @@ async function loadSettings() {
     const nameElement = document.getElementById('store-name');
     const headerColorElement = document.getElementById('main-header');
     const btnColorElement = document.getElementById('main-btn');
+    const btnTextColorElement = document.getElementById('main-btn-text');
     const textColorElement = document.getElementById('main-text');
     const logoPreviewElement = document.getElementById('logo-preview');
 
     if (nameElement) nameElement.value = data.name || '';
     if (headerColorElement) headerColorElement.value = data.headercolor || '';
-    if (btnColorElement) btnColorElement.value = data.btncolor || '';
+    
+    // التعامل مع ألوان الأزرار الجديدة
+    if (btnColorElement) {
+      if (data.btncolor && typeof data.btncolor === 'object') {
+        btnColorElement.value = data.btncolor.backgroundColor || '#007bff';
+      } else if (typeof data.btncolor === 'string') {
+        // للتوافق مع البيانات القديمة
+        btnColorElement.value = data.btncolor || '#007bff';
+      } else {
+        btnColorElement.value = '#007bff';
+      }
+    }
+    
+    if (btnTextColorElement) {
+      if (data.btncolor && typeof data.btncolor === 'object') {
+        btnTextColorElement.value = data.btncolor.textColor || '#ffffff';
+      } else {
+        btnTextColorElement.value = '#ffffff';
+      }
+    }
+    
     if (textColorElement) textColorElement.value = data.textcolor || '';
     
          if (logoPreviewElement && data.logo) {
@@ -381,18 +412,36 @@ async function loadSettings() {
       removeButtonStyles();
       const style = document.createElement('style');
       style.setAttribute('data-button-color', 'true');
+      
+      let backgroundColor = '#007bff';
+      let textColor = '#ffffff';
+      
+      if (typeof data.btncolor === 'object') {
+        backgroundColor = data.btncolor.backgroundColor || '#007bff';
+        textColor = data.btncolor.textColor || '#ffffff';
+      } else if (typeof data.btncolor === 'string') {
+        // للتوافق مع البيانات القديمة
+        backgroundColor = data.btncolor;
+        textColor = '#ffffff';
+      }
+      
       style.textContent = `
         .btn-main {
-          background: ${data.btncolor} !important;
-          color: #fff !important;
+          background: ${backgroundColor} !important;
+          color: ${textColor} !important;
           border-radius: 25px;
           font-weight: bold;
           transition: background 0.2s;
         }
         .btn-main:hover {
-          background: ${data.btncolor} !important;
-          color: #fff !important;
+          background: ${backgroundColor} !important;
+          color: ${textColor} !important;
           opacity: 0.9;
+        }
+        .btn-main:focus {
+          background: ${backgroundColor} !important;
+          color: ${textColor} !important;
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
       `;
       document.head.appendChild(style);
