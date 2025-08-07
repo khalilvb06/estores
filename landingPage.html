@@ -1328,7 +1328,7 @@
       try {
         // جلب المنتج
         const { data: landingPage, error: landingPageError } = await supabase
-          .from('Landing_page')
+          .from('landing_pages')
           .select('pixel')
           .eq('id', landingPageId)
           .single();
@@ -1455,12 +1455,6 @@
 </head>
 <body>
 
-  <main class="container py-5 px-3">
-    <div class="row" id="landing-page-content">
-      <!-- سيتم تعبئة محتوى صفحة الهبوط ديناميكياً -->
-    </div>
-  </main>
-  
   <!-- مودل التحميل -->
   <div id="loading-modal" class="loading-modal">
     <div class="loading-content">
@@ -1470,6 +1464,14 @@
       <p class="mt-3 mb-0">جاري التحميل...</p>
     </div>
   </div>
+  
+  <main class="container py-5 px-3">
+    <div class="row" id="landing-page-content">
+      <!-- سيتم تعبئة محتوى صفحة الهبوط ديناميكياً -->
+    </div>
+  </main>
+  
+  
   
   <!-- مودل نجاح إرسال الطلب -->
   <div id="success-modal" class="loading-modal" style="display: none;">
@@ -1513,6 +1515,19 @@
     let sizes = [];
     let offers = [];
     let landingPageData = null;
+
+    // إظهار مودل التحميل
+    const loadingModal = document.getElementById('loading-modal');
+      if (loadingModal) {
+        loadingModal.style.display = 'flex';
+      }
+      
+      // إخفاء مودل التحميل بعد 3 ثواني
+      setTimeout(() => {
+        if (loadingModal) {
+          loadingModal.style.display = 'none';
+        }
+      }, 3000);
     
     // دالة لجلب إعدادات المتجر وتطبيقها
     async function loadStoreSettings() {
@@ -1947,7 +1962,11 @@
         const state_id = orderForm.querySelector('#state').value;
         const shipping_type = orderForm.querySelector('input[name="shippingType"]:checked')?.value;
         
-
+        if (!full_name) {
+          orderForm.querySelector('#fullName').focus();
+          orderForm.querySelector('#fullName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
         
         // التحقق من رقم الهاتف
         if (!phone_number) {
@@ -2241,18 +2260,7 @@
     }
     
     document.addEventListener('DOMContentLoaded', () => {
-      // إظهار مودل التحميل
-      const loadingModal = document.getElementById('loading-modal');
-      if (loadingModal) {
-        loadingModal.style.display = 'flex';
-      }
       
-      // إخفاء مودل التحميل بعد 3 ثواني
-      setTimeout(() => {
-        if (loadingModal) {
-          loadingModal.style.display = 'none';
-        }
-      }, 1500);
       
       loadStoreSettings();
       loadLandingPageDetails();
