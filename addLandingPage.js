@@ -12,8 +12,49 @@ let editColors = [];
 let editSizes = [];
 let editOffers = [];
 
+// متغيرات الأداء
+let categoriesCache = null;
+let pixelsCache = null;
+let landingPagesCache = null;
+let lastLoadTime = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 دقائق
+
+// دالة debounce لتحسين الأداء
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// دالة تحسين حجم الصورة
+function compressImage(file, maxWidth = 800, quality = 0.8) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = function() {
+      const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
+      canvas.width = img.width * ratio;
+      canvas.height = img.height * ratio;
+      
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+      resolve(compressedDataUrl);
+    };
+    
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 // دالة إضافة صورة لصفحة الهبوط
-window.addLandingPageImage = function() {
+window.addLandingPageImage = async function() {
   const fileInput = document.getElementById('landingPageImage');
   const file = fileInput.files[0];
   
@@ -22,30 +63,49 @@ window.addLandingPageImage = function() {
     return;
   }
   
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imageUrl = e.target.result;
-    landingPageImages.push(imageUrl);
+  // إظهار مؤشر التحميل
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'text-center p-2';
+  loadingIndicator.innerHTML = '<small>جاري معالجة الصورة...</small>';
+  document.getElementById('landingPageImagesList').appendChild(loadingIndicator);
+  
+  try {
+    // ضغط الصورة
+    const compressedImage = await compressImage(file);
+    landingPageImages.push(compressedImage);
     updateLandingPageImagesList();
-    fileInput.value = ''; // مسح حقل الملف
-  };
-  reader.readAsDataURL(file);
+    fileInput.value = '';
+  } catch (error) {
+    console.error('خطأ في معالجة الصورة:', error);
+    alert('حدث خطأ في معالجة الصورة');
+  } finally {
+    // إزالة مؤشر التحميل
+    if (loadingIndicator.parentNode) {
+      loadingIndicator.parentNode.removeChild(loadingIndicator);
+    }
+  }
 };
 
-// دالة تحديث قائمة صور صفحة الهبوط
+// دالة تحديث قائمة صور صفحة الهبوط (محسنة)
 function updateLandingPageImagesList() {
   const container = document.getElementById('landingPageImagesList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  // استخدام DocumentFragment لتحسين الأداء
+  const fragment = document.createDocumentFragment();
   
   landingPageImages.forEach((image, index) => {
     const imageDiv = document.createElement('div');
     imageDiv.className = 'position-relative d-inline-block me-2 mb-2';
     imageDiv.innerHTML = `
-      <img src="${image}" alt="صورة ${index + 1}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid #e0e7ff;">
+      <img src="${image}" alt="صورة ${index + 1}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid #e0e7ff;" loading="lazy">
       <button class="btn btn-sm btn-danger position-absolute" style="top: -5px; right: -5px;" onclick="removeLandingPageImage(${index})">×</button>
     `;
-    container.appendChild(imageDiv);
+    fragment.appendChild(imageDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 // دالة إزالة صورة من صفحة الهبوط
@@ -72,10 +132,12 @@ window.addColor = function() {
   document.getElementById('colorPicker').value = '#000000';
 };
 
-// دالة تحديث قائمة الألوان
+// دالة تحديث قائمة الألوان (محسنة)
 function updateColorsList() {
   const container = document.getElementById('colorsList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   colors.forEach((color, index) => {
     const colorDiv = document.createElement('div');
@@ -85,8 +147,11 @@ function updateColorsList() {
       <span>${color.name}</span>
       <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeColor(${index})">×</button>
     `;
-    container.appendChild(colorDiv);
+    fragment.appendChild(colorDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 // دالة إزالة لون
@@ -115,10 +180,12 @@ window.addSize = function() {
   sizeInput.value = '';
 };
 
-// دالة تحديث قائمة المقاسات
+// دالة تحديث قائمة المقاسات (محسنة)
 function updateSizesList() {
   const container = document.getElementById('sizesList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   sizes.forEach((size, index) => {
     const sizeDiv = document.createElement('div');
@@ -127,8 +194,11 @@ function updateSizesList() {
       <span>${size}</span>
       <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeSize(${index})">×</button>
     `;
-    container.appendChild(sizeDiv);
+    fragment.appendChild(sizeDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 // دالة إزالة مقاس
@@ -155,10 +225,12 @@ window.addOffer = function() {
   document.getElementById('offerPrice').value = '';
 };
 
-// دالة تحديث قائمة العروض
+// دالة تحديث قائمة العروض (محسنة)
 function updateOffersList() {
   const container = document.getElementById('offersList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   offers.forEach((offer, index) => {
     const offerDiv = document.createElement('div');
@@ -167,8 +239,11 @@ function updateOffersList() {
       <span>${offer.qty} قطعة بـ ${offer.price} دج</span>
       <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeOffer(${index})">×</button>
     `;
-    container.appendChild(offerDiv);
+    fragment.appendChild(offerDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 // دالة إزالة عرض
@@ -182,6 +257,7 @@ window.publishLandingPage = async function() {
   const name = document.getElementById('landingPageName').value.trim();
   const imageWidth = document.getElementById('imageWidth').value;
   const price = document.getElementById('price').value;
+  const categoryId = document.getElementById('categorySelect').value;
   const pixel = document.getElementById('pixelSelect').value;
   const available = document.getElementById('landingPageAvailable').checked;
   
@@ -205,6 +281,12 @@ window.publishLandingPage = async function() {
     return;
   }
   
+  // إظهار مؤشر التحميل
+  const submitBtn = document.querySelector('button[onclick="publishLandingPage()"]');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
+  submitBtn.disabled = true;
+  
   // تجهيز البيانات للإرسال
   const landingPageData = {
     name: name,
@@ -214,6 +296,7 @@ window.publishLandingPage = async function() {
     sizes: JSON.stringify(sizes),
     offers: JSON.stringify(offers),
     price: parseInt(price),
+    category_id: categoryId || null,
     pixel: pixel,
     available: available,
     created_at: new Date().toISOString()
@@ -238,11 +321,15 @@ window.publishLandingPage = async function() {
     clearForm();
     
     // تحديث الجدول
-    loadLandingPages();
+    await loadLandingPages();
     
   } catch (error) {
     console.error('خطأ في إضافة صفحة الهبوط:', error);
     alert('حدث خطأ أثناء إضافة صفحة الهبوط');
+  } finally {
+    // إعادة تعيين الزر
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
   }
 };
 
@@ -251,6 +338,7 @@ function clearForm() {
   document.getElementById('landingPageName').value = '';
   document.getElementById('imageWidth').value = '';
   document.getElementById('price').value = '';
+  document.getElementById('categorySelect').value = '';
   document.getElementById('pixelSelect').value = '';
   document.getElementById('landingPageAvailable').checked = true;
   
@@ -265,12 +353,35 @@ function clearForm() {
   updateOffersList();
 }
 
-// دالة تحميل صفحات الهبوط
+// دالة تحميل صفحات الهبوط (محسنة مع caching)
 async function loadLandingPages() {
+  const now = Date.now();
+  
+  // التحقق من الكاش
+  if (landingPagesCache && (now - lastLoadTime) < CACHE_DURATION) {
+    displayLandingPages(landingPagesCache);
+    return;
+  }
+  
+  // إظهار مؤشر التحميل
+  const tableContainer = document.getElementById('landingPagesTable');
+  if (tableContainer) {
+    const loadingRow = document.createElement('tr');
+    loadingRow.id = 'loading-row';
+    loadingRow.innerHTML = '<td colspan="7" class="text-center"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</td>';
+    tableContainer.querySelector('tbody').appendChild(loadingRow);
+  }
+  
   try {
     const { data, error } = await supabase
       .from('landing_pages')
-      .select('*')
+      .select(`
+        *,
+        categories (
+          id,
+          name
+        )
+      `)
       .order('created_at', { ascending: false });
     
     if (error) {
@@ -278,17 +389,30 @@ async function loadLandingPages() {
       return;
     }
     
-    displayLandingPages(data || []);
+    // تحديث الكاش
+    landingPagesCache = data || [];
+    lastLoadTime = now;
+    
+    displayLandingPages(landingPagesCache);
     
   } catch (error) {
     console.error('خطأ في تحميل صفحات الهبوط:', error);
+  } finally {
+    // إزالة مؤشر التحميل
+    const loadingRow = document.getElementById('loading-row');
+    if (loadingRow) {
+      loadingRow.remove();
+    }
   }
 }
 
-// دالة عرض صفحات الهبوط في الجدول
+// دالة عرض صفحات الهبوط في الجدول (محسنة)
 function displayLandingPages(landingPages) {
   const tbody = document.querySelector('#landingPagesTable tbody');
-  tbody.innerHTML = '';
+  if (!tbody) return;
+  
+  // استخدام DocumentFragment لتحسين الأداء
+  const fragment = document.createDocumentFragment();
   
   landingPages.forEach(landingPage => {
     let image = 'https://via.placeholder.com/100x60';
@@ -310,9 +434,10 @@ function displayLandingPages(landingPages) {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>
-        <img src="${image}" alt="صورة صفحة الهبوط" class="landing-page-image" onerror="this.src='https://via.placeholder.com/100x60'">
+        <img src="${image}" alt="صورة صفحة الهبوط" class="landing-page-image" onerror="this.src='https://via.placeholder.com/100x60'" loading="lazy">
       </td>
       <td>${landingPage.name}</td>
+      <td>${landingPage.categories ? landingPage.categories.name : 'غير محدد'}</td>
       <td>${landingPage.image_width || 'غير محدد'}</td>
       <td>${landingPage.price} دج</td>
       <td>
@@ -338,8 +463,11 @@ function displayLandingPages(landingPages) {
         </div>
       </td>
     `;
-    tbody.appendChild(row);
+    fragment.appendChild(row);
   });
+  
+  tbody.innerHTML = '';
+  tbody.appendChild(fragment);
 }
 
 // دالة عرض صفحة الهبوط
@@ -347,8 +475,14 @@ window.viewLandingPage = function(id) {
   window.open(`landingPage.html?id=${id}`, '_blank');
 };
 
-// دالة تبديل حالة التوفر
+// دالة تبديل حالة التوفر (محسنة)
 window.toggleLandingPageAvailability = async function(id, currentStatus) {
+  // إظهار مؤشر التحميل
+  const button = event.target.closest('button');
+  const originalHTML = button.innerHTML;
+  button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  button.disabled = true;
+  
   try {
     const { error } = await supabase
       .from('landing_pages')
@@ -361,20 +495,36 @@ window.toggleLandingPageAvailability = async function(id, currentStatus) {
       return;
     }
     
-    // تحديث الجدول
-    loadLandingPages();
+    // تحديث الكاش بدلاً من إعادة التحميل
+    if (landingPagesCache) {
+      const pageIndex = landingPagesCache.findIndex(page => page.id === id);
+      if (pageIndex !== -1) {
+        landingPagesCache[pageIndex].available = !currentStatus;
+        displayLandingPages(landingPagesCache);
+      }
+    }
     
   } catch (error) {
     console.error('خطأ في تحديث حالة التوفر:', error);
     alert('حدث خطأ أثناء تحديث حالة التوفر');
+  } finally {
+    // إعادة تعيين الزر
+    button.innerHTML = originalHTML;
+    button.disabled = false;
   }
 };
 
-// دالة حذف صفحة الهبوط
+// دالة حذف صفحة الهبوط (محسنة)
 window.deleteLandingPage = async function(id) {
   if (!confirm('هل أنت متأكد من حذف صفحة الهبوط؟')) {
     return;
   }
+  
+  // إظهار مؤشر التحميل
+  const button = event.target.closest('button');
+  const originalHTML = button.innerHTML;
+  button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  button.disabled = true;
   
   try {
     const { error } = await supabase
@@ -388,12 +538,19 @@ window.deleteLandingPage = async function(id) {
       return;
     }
     
-    // تحديث الجدول
-    loadLandingPages();
+    // تحديث الكاش بدلاً من إعادة التحميل
+    if (landingPagesCache) {
+      landingPagesCache = landingPagesCache.filter(page => page.id !== id);
+      displayLandingPages(landingPagesCache);
+    }
     
   } catch (error) {
     console.error('خطأ في حذف صفحة الهبوط:', error);
     alert('حدث خطأ أثناء حذف صفحة الهبوط');
+  } finally {
+    // إعادة تعيين الزر
+    button.innerHTML = originalHTML;
+    button.disabled = false;
   }
 };
 
@@ -411,8 +568,14 @@ window.logout = async function() {
   }
 };
 
-// دالة تعديل صفحة الهبوط
+// دالة تعديل صفحة الهبوط (محسنة)
 window.editLandingPage = async function(id) {
+  // إظهار مؤشر التحميل
+  const button = event.target.closest('button');
+  const originalHTML = button.innerHTML;
+  button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  button.disabled = true;
+  
   try {
     const { data, error } = await supabase
       .from('landing_pages')
@@ -431,6 +594,7 @@ window.editLandingPage = async function(id) {
     document.getElementById('editLandingPageName').value = data.name;
     document.getElementById('editImageWidth').value = data.image_width || '';
     document.getElementById('editPrice').value = data.price;
+    document.getElementById('editCategorySelect').value = data.category_id || '';
     document.getElementById('editPixelSelect').value = data.pixel || '';
     document.getElementById('editLandingPageAvailable').checked = data.available;
     
@@ -489,11 +653,15 @@ window.editLandingPage = async function(id) {
   } catch (error) {
     console.error('خطأ في تحميل بيانات صفحة الهبوط:', error);
     alert('حدث خطأ أثناء تحميل بيانات صفحة الهبوط');
+  } finally {
+    // إعادة تعيين الزر
+    button.innerHTML = originalHTML;
+    button.disabled = false;
   }
 };
 
-// دوال إدارة صور التعديل
-window.addEditLandingPageImage = function() {
+// دوال إدارة صور التعديل (محسنة)
+window.addEditLandingPageImage = async function() {
   const fileInput = document.getElementById('editLandingPageImage');
   const file = fileInput.files[0];
   
@@ -502,29 +670,47 @@ window.addEditLandingPageImage = function() {
     return;
   }
   
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imageUrl = e.target.result;
-    editLandingPageImages.push(imageUrl);
+  // إظهار مؤشر التحميل
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'text-center p-2';
+  loadingIndicator.innerHTML = '<small>جاري معالجة الصورة...</small>';
+  document.getElementById('editLandingPageImagesList').appendChild(loadingIndicator);
+  
+  try {
+    // ضغط الصورة
+    const compressedImage = await compressImage(file);
+    editLandingPageImages.push(compressedImage);
     updateEditLandingPageImagesList();
     fileInput.value = '';
-  };
-  reader.readAsDataURL(file);
+  } catch (error) {
+    console.error('خطأ في معالجة الصورة:', error);
+    alert('حدث خطأ في معالجة الصورة');
+  } finally {
+    // إزالة مؤشر التحميل
+    if (loadingIndicator.parentNode) {
+      loadingIndicator.parentNode.removeChild(loadingIndicator);
+    }
+  }
 };
 
 function updateEditLandingPageImagesList() {
   const container = document.getElementById('editLandingPageImagesList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   editLandingPageImages.forEach((image, index) => {
     const imageDiv = document.createElement('div');
     imageDiv.className = 'position-relative d-inline-block me-2 mb-2';
     imageDiv.innerHTML = `
-      <img src="${image}" alt="صورة ${index + 1}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid #e0e7ff;">
+      <img src="${image}" alt="صورة ${index + 1}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid #e0e7ff;" loading="lazy">
       <button class="btn btn-sm btn-danger position-absolute" style="top: -5px; right: -5px;" onclick="removeEditLandingPageImage(${index})">×</button>
     `;
-    container.appendChild(imageDiv);
+    fragment.appendChild(imageDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 window.removeEditLandingPageImage = function(index) {
@@ -532,7 +718,7 @@ window.removeEditLandingPageImage = function(index) {
   updateEditLandingPageImagesList();
 };
 
-// دوال إدارة ألوان التعديل
+// دوال إدارة ألوان التعديل (محسنة)
 window.addEditColor = function() {
   const colorName = document.getElementById('editColorName').value.trim();
   const colorHex = document.getElementById('editColorPicker').value;
@@ -551,7 +737,9 @@ window.addEditColor = function() {
 
 function updateEditColorsList() {
   const container = document.getElementById('editColorsList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   editColors.forEach((color, index) => {
     const colorDiv = document.createElement('div');
@@ -561,8 +749,11 @@ function updateEditColorsList() {
       <span>${color.name}</span>
       <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeEditColor(${index})">×</button>
     `;
-    container.appendChild(colorDiv);
+    fragment.appendChild(colorDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 window.removeEditColor = function(index) {
@@ -570,7 +761,7 @@ window.removeEditColor = function(index) {
   updateEditColorsList();
 };
 
-// دوال إدارة مقاسات التعديل
+// دوال إدارة مقاسات التعديل (محسنة)
 window.addEditSize = function() {
   const sizeInput = document.getElementById('editSizeInput');
   const size = sizeInput.value.trim();
@@ -587,7 +778,9 @@ window.addEditSize = function() {
 
 function updateEditSizesList() {
   const container = document.getElementById('editSizesList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   editSizes.forEach((size, index) => {
     const sizeDiv = document.createElement('div');
@@ -596,8 +789,11 @@ function updateEditSizesList() {
       <span>${size}</span>
       <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeEditSize(${index})">×</button>
     `;
-    container.appendChild(sizeDiv);
+    fragment.appendChild(sizeDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 window.removeEditSize = function(index) {
@@ -605,7 +801,7 @@ window.removeEditSize = function(index) {
   updateEditSizesList();
 };
 
-// دوال إدارة عروض التعديل
+// دوال إدارة عروض التعديل (محسنة)
 window.addEditOffer = function() {
   const qty = document.getElementById('editOfferQty').value;
   const price = document.getElementById('editOfferPrice').value;
@@ -624,7 +820,9 @@ window.addEditOffer = function() {
 
 function updateEditOffersList() {
   const container = document.getElementById('editOffersList');
-  container.innerHTML = '';
+  if (!container) return;
+  
+  const fragment = document.createDocumentFragment();
   
   editOffers.forEach((offer, index) => {
     const offerDiv = document.createElement('div');
@@ -633,8 +831,11 @@ function updateEditOffersList() {
       <span>${offer.qty} قطعة - ${offer.price} دج</span>
       <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeEditOffer(${index})">×</button>
     `;
-    container.appendChild(offerDiv);
+    fragment.appendChild(offerDiv);
   });
+  
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
 window.removeEditOffer = function(index) {
@@ -642,12 +843,13 @@ window.removeEditOffer = function(index) {
   updateEditOffersList();
 };
 
-// دالة تحديث صفحة الهبوط
+// دالة تحديث صفحة الهبوط (محسنة)
 window.updateLandingPage = async function() {
   const id = document.getElementById('editLandingPageId').value;
   const name = document.getElementById('editLandingPageName').value.trim();
   const imageWidth = document.getElementById('editImageWidth').value;
   const price = document.getElementById('editPrice').value;
+  const categoryId = document.getElementById('editCategorySelect').value;
   const pixel = document.getElementById('editPixelSelect').value;
   const available = document.getElementById('editLandingPageAvailable').checked;
   
@@ -655,6 +857,12 @@ window.updateLandingPage = async function() {
     alert('يرجى إدخال اسم صفحة الهبوط والسعر');
     return;
   }
+  
+  // إظهار مؤشر التحميل
+  const submitBtn = document.querySelector('button[onclick="updateLandingPage()"]');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحديث...';
+  submitBtn.disabled = true;
   
   const landingPageData = {
     name: name,
@@ -664,6 +872,7 @@ window.updateLandingPage = async function() {
     sizes: JSON.stringify(editSizes),
     offers: JSON.stringify(editOffers),
     price: parseInt(price),
+    category_id: categoryId || null,
     pixel: pixel,
     available: available,
     updated_at: new Date().toISOString()
@@ -691,57 +900,142 @@ window.updateLandingPage = async function() {
     document.querySelector('#successModal .modal-body p').textContent = 'تم تحديث صفحة الهبوط بنجاح!';
     successModal.show();
     
-    // تحديث الجدول
-    loadLandingPages();
+    // تحديث الكاش بدلاً من إعادة التحميل
+    if (landingPagesCache) {
+      const pageIndex = landingPagesCache.findIndex(page => page.id === parseInt(id));
+      if (pageIndex !== -1) {
+        landingPagesCache[pageIndex] = { ...landingPagesCache[pageIndex], ...landingPageData };
+        displayLandingPages(landingPagesCache);
+      }
+    }
     
   } catch (error) {
     console.error('خطأ في تحديث صفحة الهبوط:', error);
     alert('حدث خطأ أثناء تحديث صفحة الهبوط');
+  } finally {
+    // إعادة تعيين الزر
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
   }
 };
 
-// دالة جلب قائمة البيكسلات من جدول ad_pixels
+// دالة جلب قائمة التصنيفات من جدول categories (محسنة مع caching)
+async function fetchCategories() {
+  const select = document.getElementById('categorySelect');
+  const editSelect = document.getElementById('editCategorySelect');
+  
+  if (!select || !editSelect) return;
+  
+  // التحقق من الكاش
+  if (categoriesCache) {
+    populateCategorySelects(categoriesCache);
+    return;
+  }
+  
+  try {
+    const { data, error } = await supabase.from('categories').select('*').order('name');
+    if (!error && data) {
+      categoriesCache = data;
+      populateCategorySelects(data);
+    }
+  } catch (error) {
+    console.error('خطأ في جلب التصنيفات:', error);
+  }
+}
+
+// دالة تعبئة قوائم التصنيفات
+function populateCategorySelects(categories) {
+  const select = document.getElementById('categorySelect');
+  const editSelect = document.getElementById('editCategorySelect');
+  
+  if (!select || !editSelect) return;
+  
+  const options = '<option value="">اختر التصنيف</option>' + 
+    categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('');
+  
+  select.innerHTML = options;
+  editSelect.innerHTML = options;
+}
+
+// دالة جلب قائمة البيكسلات من جدول ad_pixels (محسنة مع caching)
 async function fetchPixels() {
   const select = document.getElementById('pixelSelect');
   const editSelect = document.getElementById('editPixelSelect');
   
   if (!select || !editSelect) return;
   
-  // إعادة تعيين قوائم البيكسلات
-  select.innerHTML = '<option value="">اختر البيكسل</option>';
-  editSelect.innerHTML = '<option value="">اختر البيكسل</option>';
+  // التحقق من الكاش
+  if (pixelsCache) {
+    populatePixelSelects(pixelsCache);
+    return;
+  }
   
   try {
     const { data, error } = await supabase.from('ad_pixels').select('*');
     if (!error && data) {
-      data.forEach(pixel => {
-        select.innerHTML += `<option value="${pixel.id}">${pixel.pixel_name}</option>`;
-        editSelect.innerHTML += `<option value="${pixel.id}">${pixel.pixel_name}</option>`;
-      });
+      pixelsCache = data;
+      populatePixelSelects(data);
     }
   } catch (error) {
     console.error('خطأ في جلب البيكسلات:', error);
   }
 }
 
-// إعداد الأحداث عند تحميل الصفحة
+// دالة تعبئة قوائم البيكسلات
+function populatePixelSelects(pixels) {
+  const select = document.getElementById('pixelSelect');
+  const editSelect = document.getElementById('editPixelSelect');
+  
+  if (!select || !editSelect) return;
+  
+  const options = '<option value="">اختر البيكسل</option>' + 
+    pixels.map(pixel => `<option value="${pixel.id}">${pixel.pixel_name}</option>`).join('');
+  
+  select.innerHTML = options;
+  editSelect.innerHTML = options;
+}
+
+// دالة تحديث الكاش عند إضافة/تعديل/حذف بيانات
+function invalidateCache() {
+  categoriesCache = null;
+  pixelsCache = null;
+  landingPagesCache = null;
+  lastLoadTime = 0;
+}
+
+// إعداد الأحداث عند تحميل الصفحة (محسن)
 document.addEventListener('DOMContentLoaded', function() {
   // إظهار/إخفاء نموذج الإضافة
   const showFormBtn = document.getElementById('showAddLandingPageFormBtn');
   const formWrapper = document.getElementById('addLandingPageFormWrapper');
   
-  showFormBtn.addEventListener('click', function() {
-    if (formWrapper.style.display === 'none') {
-      formWrapper.style.display = 'block';
-      showFormBtn.textContent = '❌ إلغاء الإضافة';
-    } else {
-      formWrapper.style.display = 'none';
-      showFormBtn.textContent = '➕ إضافة صفحة هبوط';
-      clearForm();
-    }
+  if (showFormBtn && formWrapper) {
+    showFormBtn.addEventListener('click', function() {
+      if (formWrapper.style.display === 'none') {
+        formWrapper.style.display = 'block';
+        showFormBtn.textContent = '❌ إلغاء الإضافة';
+      } else {
+        formWrapper.style.display = 'none';
+        showFormBtn.textContent = '➕ إضافة صفحة هبوط';
+        clearForm();
+      }
+    });
+  }
+  
+  // تحميل البيانات بشكل متوازي
+  Promise.all([
+    fetchCategories(),
+    fetchPixels(),
+    loadLandingPages()
+  ]).catch(error => {
+    console.error('خطأ في تحميل البيانات الأولية:', error);
   });
   
-  // تحميل البيكسلات وصفحات الهبوط
-  fetchPixels();
-  loadLandingPages();
+  // إضافة event listener للبحث (إذا كان موجود)
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', debounce(function() {
+      // تنفيذ البحث هنا إذا كان مطلوباً
+    }, 300));
+  }
 }); 
