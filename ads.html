@@ -406,6 +406,7 @@
             <th>#</th>
             <th>اسم البيكسل</th>
             <th>كود البيكسل</th>
+            <th>نوع الحملة</th>
             <th>التحكم</th>
           </tr>
         </thead>
@@ -430,9 +431,23 @@
             <label for="pixelName" class="form-label">اسم البيكسل</label>
             <input type="text" class="form-control" id="pixelName" required>
           </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="pixelType" class="form-label">نوع البيكسل</label>
+              <select class="form-select" id="pixelType" required>
+                <option value="">اختر نوع البيكسل</option>
+                <option value="facebook_pixel">Facebook Pixel</option>
+                <option value="google_analytics">Google Analytics</option>
+                <option value="google_tag_manager">Google Tag Manager</option>
+                <option value="tiktok_pixel">TikTok Pixel</option>
+                <option value="snapchat_pixel">Snapchat Pixel</option>
+                <option value="custom">كود مخصص</option>
+              </select>
+            </div>
+          </div>
           <div class="mb-3">
             <label for="pixelCode" class="form-label">كود البيكسل</label>
-            <textarea class="form-control" id="pixelCode" rows="4" required></textarea>
+            <input type = "text" class="form-control" id="pixelCode" required></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -453,3 +468,4 @@
   <script type="module" src="logout.js"></script>
 </body>
 </html>
+
