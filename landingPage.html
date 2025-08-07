@@ -4,16 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>صفحة الهبوط</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="iphone-optimizations.css">
   <style>
+    /* تطبيق خط Cairo على جميع العناصر */
+    * {
+      font-family: 'Cairo', sans-serif !important;
+    }
+    
+    /* تطبيق خط Cairo على عناصر النموذج */
+    input, select, textarea, button, label, .form-control, .form-select {
+      font-family: 'Cairo', sans-serif !important;
+    }
+    
+    /* تطبيق خط Cairo على النصوص والعناوين */
+    p, span, div, a, .card-title, .card-text, .landing-page-title, .landing-page-description {
+      font-family: 'Cairo', sans-serif !important;
+    }
+    
+    /* تطبيق خط Cairo على جميع الأجهزة */
+    @media (max-width: 767px) {
+      * {
+        font-family: 'Cairo', sans-serif !important;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      * {
+        font-family: 'Cairo', sans-serif !important;
+      }
+    }
+    
+    body {
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 400;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 600;
+    }
+    
     .main-header, .main-footer {
       background: #fff;
       border-radius: 0 0 20px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
       margin-left: 20px;
       margin-right: 20px;
+    }
+    
+    .main-header {
+      background: var(--header-color, #fff) !important;
+      color: #fff !important;
+    }
+    
+    .main-header h1, .main-header span {
+      color: #fff !important;
     }
     
     /* تحسين البادينغ للشاشات الكبيرة */
@@ -97,7 +146,7 @@
     
     .main-footer {
       font-size: 1rem;
-      color: #555;
+      color: var(--text-color, #555);
     }
     
     /* تحسين البادينغ للشاشات المتوسطة */
@@ -147,12 +196,11 @@
     
     .main-footer {
       font-size: 1rem;
-      color: #555;
+      color: var(--text-color, #555);
     }
     
     .landing-page-image {
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       margin-bottom: 2rem;
       padding: 15px;
       background: #fff;
@@ -184,16 +232,17 @@
     }
     
     .btn-main {
-      background: #007bff;
-      color: #fff;
+      background: var(--btn-color, #007bff);
+      color: var(--btn-text-color, #fff);
       border-radius: 25px;
       font-weight: bold;
       transition: background 0.2s;
     }
     
     .btn-main:hover {
-      background: #0056b3;
-      color: #fff;
+      background: var(--btn-color, #007bff);
+      color: var(--btn-text-color, #fff);
+      opacity: 0.9;
     }
     
     .form-label {
@@ -203,7 +252,6 @@
     
     .form-control, .form-select {
       border-radius: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
     }
     
     .list-group-item {
@@ -230,7 +278,6 @@
       border-radius: 12px;
       padding: 15px;
       margin: 10px 0;
-      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
       position: relative;
       overflow: hidden;
     }
@@ -241,9 +288,7 @@
       border-radius: 15px;
       padding: 18px;
       margin: 15px 0;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      border: 2px solid;
-      border-image: linear-gradient(45deg, var(--btn-color, #007bff), var(--btn-color, #007bff)) 1;
+      border: 2px solid var(--btn-color, #007bff);
       position: relative;
       overflow: hidden;
     }
@@ -346,7 +391,6 @@
       outline: none;
       border-color: var(--btn-color, #007bff);
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     }
     
     .modern-radio-group {
@@ -380,9 +424,12 @@
     .modern-radio-item input[type="radio"]:checked + label {
       border-color: var(--btn-color, #007bff);
       background: var(--btn-color, #007bff);
-      color: #fff;
+      color: var(--btn-text-color, #fff);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    .modern-radio-item input[type="radio"]:checked + label:hover {
+      opacity: 0.9;
     }
     
     .modern-color-options {
@@ -414,7 +461,10 @@
     .modern-color-option input[type="radio"]:checked + label {
       border-color: var(--btn-color, #007bff);
       transform: scale(1.1);
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+    
+    .modern-color-option input[type="radio"]:checked + label:hover {
+      transform: scale(1.15);
     }
     
     .modern-size-options {
@@ -449,9 +499,12 @@
     .modern-size-option input[type="radio"]:checked + label {
       border-color: var(--btn-color, #007bff);
       background: var(--btn-color, #007bff);
-      color: #fff;
+      color: var(--btn-text-color, #fff);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    .modern-size-option input[type="radio"]:checked + label:hover {
+      opacity: 0.9;
     }
     
     .modern-quantity-selector {
@@ -484,7 +537,7 @@
       height: 32px;
       border: 2px solid var(--btn-color, #007bff);
       background: var(--btn-color, #007bff);
-      color: #fff;
+      color: var(--btn-text-color, #fff);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -497,7 +550,7 @@
     
     .modern-quantity-btn:hover {
       transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+      opacity: 0.9;
     }
     
     .modern-quantity-display {
@@ -547,11 +600,15 @@
       color: var(--btn-color, #007bff);
     }
     
+    .modern-summary-item:last-child:hover {
+      opacity: 0.9;
+    }
+    
     .modern-submit-btn {
       width: 100%;
       padding: 14px;
       background: var(--btn-color, #007bff);
-      color: #fff;
+      color: var(--btn-text-color, #fff);
       border: none;
       border-radius: 12px;
       font-size: 1rem;
@@ -567,7 +624,7 @@
     
     .modern-submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+      opacity: 0.9;
     }
     
     .modern-submit-btn:disabled {
@@ -707,7 +764,7 @@
       
           /* تحسين الفونت للآيفون */
     body, input, select, textarea, button, label {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Cairo', Tahoma, sans-serif !important;
+      font-family: 'Cairo', sans-serif !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       font-feature-settings: "liga" 1, "kern" 1;
@@ -735,17 +792,34 @@
     /* تحسينات إضافية للفورم الجديد */
     .modern-form-container {
       animation: fadeInUp 0.6s ease-out, formDance 3s ease-in-out infinite;
+      border-color: var(--btn-color, #007bff);
+    }
+    
+    .modern-form-container::before {
+      background: var(--btn-color, #007bff);
+    }
+    
+    .modern-form-container input:focus,
+    .modern-form-container select:focus {
+      border-color: var(--btn-color, #007bff);
+    }
+    
+    .form-section-title::before {
+      background: var(--btn-color, #007bff);
+    }
+    
+    .modern-summary-item:last-child {
+      color: var(--btn-color, #007bff);
     }
     
     /* تنسيق السعر والحالة في سطر واحد */
     .mobile-price-status {
       background: var(--btn-color, #007bff);
-      color: #fff;
+      color: var(--btn-text-color, #fff);
       border-radius: 10px;
       padding: 12px;
       margin-bottom: 10px;
       border: 1px solid var(--btn-color, #007bff);
-      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -786,26 +860,24 @@
     
     .mobile-price-status:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
     }
     
     .mobile-price-status:active {
       transform: translateY(0) scale(0.98);
-      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
     }
     
     .mobile-price-status h4 {
       margin: 0;
       font-size: 1.1rem;
-      color: #fff;
+      color: var(--btn-text-color, #fff);
     }
     
     .mobile-price-status .badge {
       font-size: 0.8rem;
       padding: 6px 10px;
-      background: #fff !important;
+      background: var(--btn-text-color, #fff) !important;
       color: var(--btn-color, #007bff) !important;
-      border: 1px solid #fff;
+      border: 1px solid var(--btn-text-color, #fff);
     }
     
     /* تحسين عرض الحقول في سطر واحد */
@@ -949,7 +1021,6 @@
       border-radius: 12px;
       padding: 15px;
       margin: 10px 0;
-      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
       position: relative;
       overflow: hidden;
     }
@@ -986,7 +1057,6 @@
       right: 0;
       background: #fff;
       padding: 15px;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
       background-color: transparent ; 
       z-index: 1000;
       border-top: 1px solid #e0e0e0;
@@ -994,6 +1064,15 @@
       transform: translateX(0);
       transition: transform 0.3s ease-in-out;
       animation: mobileButtonDance 2s ease-in-out infinite;
+    }
+    
+    .mobile-submit-btn .modern-submit-btn {
+      background: var(--btn-color, #007bff) !important;
+      color: var(--btn-text-color, #fff) !important;
+    }
+    
+    .mobile-submit-btn .modern-submit-btn:hover {
+      opacity: 0.9;
     }
     
     /* تنسيق زر إرسال الطلب للشاشات الكبيرة */
@@ -1010,15 +1089,16 @@
     .desktop-submit-btn .modern-submit-btn {
       padding: 15px 30px;
       border-radius: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       font-size: 1.1rem;
       min-width: 200px;
       transition: all 0.3s ease;
+      background: var(--btn-color, #007bff) !important;
+      color: var(--btn-text-color, #fff) !important;
     }
     
     .desktop-submit-btn .modern-submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      opacity: 0.9;
     }
     
     /* تحريك الزر يميناً ويساراً */
@@ -1095,7 +1175,6 @@
       background: white;
       padding: 2rem;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       border: 1px solid #e0e0e0;
     }
     
@@ -1124,7 +1203,6 @@
     #success-modal .btn-success:hover {
       background: #218838;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
     }
     
     .spinner-border {
@@ -1134,7 +1212,6 @@
     
     .color-box {
       border: 1px solid #ccc;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
     }
     
     @media (max-width: 767px) {
@@ -1238,16 +1315,146 @@
         }
       }
   </style>
+  <script type="module" src="server-superbase.js"></script>
+  <script type="module">
+    import { supabase } from './server-superbase.js';
+  
+    const urlParams = new URLSearchParams(window.location.search);
+    const landingPageId = urlParams.get("id");
+  
+    async function injectDynamicPixel() {
+      if (!landingPageId) return;
+  
+      try {
+        // جلب المنتج
+        const { data: landingPage, error: landingPageError } = await supabase
+          .from('Landing_page')
+          .select('pixel')
+          .eq('id', landingPageId)
+          .single();
+  
+        if (landingPageError || !landingPage?.pixel) {
+          console.warn("لا يوجد بيكسل مرتبط بهذا المنتج");
+          return;
+        }
+  
+        const pixelId = landingPage.pixel;
+  
+        // جلب كود البيكسل
+        const { data: pixelData, error: pixelError } = await supabase
+          .from('ad_pixels')
+          .select('id, pixel_name, pixel_code')
+          .eq('id', pixelId)
+          .single();
+  
+        if (pixelError || !pixelData) {
+          console.error("خطأ في جلب بيانات البيكسل:", pixelError?.message || "بيانات غير موجودة");
+          return;
+        }
+  
+        // تحليل JSONB
+        let pixelType, pixelCode;
+        try {
+          const parsed = typeof pixelData.pixel_code === 'string'
+            ? JSON.parse(pixelData.pixel_code)
+            : pixelData.pixel_code;
+  
+          pixelType = parsed.type;
+          pixelCode = parsed.code;
+  
+          if (!pixelType || !pixelCode) throw new Error("البيانات ناقصة");
+        } catch (e) {
+          console.error("خطأ في تحليل JSON البيكسل:", e.message);
+          return;
+        }
+  
+        console.log("🚀 نوع البيكسل:", pixelType, " | كود:", pixelCode);
+  
+        // تفعيل البيكسل حسب النوع
+        if (pixelType === 'facebook_pixel') {
+          // تعريف fbq قبل تحميل أي سكريبت
+          window.fbq = window.fbq || function() {
+            (window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments));
+          };
+          window.fbq.push = window.fbq;
+          window.fbq.loaded = true;
+          window.fbq.version = '2.0';
+          window.fbq.queue = [];
+  
+          // تهيئة البيكسل فوراً
+          window.fbq('init', pixelCode);
+          console.log('🔧 تم تهيئة Facebook Pixel:', pixelCode);
+  
+          // تحميل Facebook Pixel SDK
+          const fbScript = document.createElement('script');
+          fbScript.src = 'https://connect.facebook.net/en_US/fbevents.js';
+          fbScript.async = true;
+          document.head.appendChild(fbScript);
+  
+          fbScript.onload = () => {
+            try {
+              // تتبع PageView
+              window.fbq('track', 'PageView');
+              console.log('📊 تم تتبع PageView');
+              
+              // تتبع ViewContent مع بيانات المنتج
+              window.fbq('track', 'ViewContent', {
+                content_type: 'landing_page',
+                content_ids: [landingPageId],
+                content_name: 'landing_page View',
+                value: 0,
+                currency: 'USD'
+              });
+              console.log('🛍️ تم تتبع ViewContent للمنتج:', landingPageId);
+  
+              // إضافة فحص إضافي للتأكد من إرسال البيانات
+              setTimeout(() => {
+                console.log('🔍 فحص حالة Facebook Pixel...');
+                if (window.fbq && window.fbq.queue) {
+                  console.log('✅ Facebook Pixel يعمل بشكل صحيح');
+                } else {
+                  console.warn('⚠️ Facebook Pixel قد لا يعمل بشكل صحيح');
+                }
+              }, 2000);
+  
+              console.log('✅ Facebook Pixel تم تهيئته بنجاح:', pixelCode);
+            } catch (error) {
+              console.error('❌ خطأ في تهيئة Facebook Pixel:', error);
+            }
+          };
+        }
+  
+        else if (pixelType === 'tiktok_pixel') {
+          // تعريف ttq كمتغير عام أولاً
+          window.ttq = window.ttq || [];
+          
+          const ttScript = document.createElement('script');
+          ttScript.src = 'https://analytics.tiktok.com/i18n/pixel/sdk.js?sdkid=' + pixelCode + '&lib=ttq';
+          ttScript.async = true;
+          document.head.appendChild(ttScript);
+  
+          ttScript.onload = () => {
+            // التأكد من وجود ttq قبل استخدامه
+            if (window.ttq && Array.isArray(window.ttq)) {
+              window.ttq.push(['init', pixelCode]);
+              window.ttq.push(['track', 'PageView']);
+              window.ttq.push(['track', 'ViewContent']);
+            }
+          };
+        }
+  
+        // يمكن إضافة أنواع أخرى هنا (Google, Snapchat, إلخ)
+  
+      } catch (err) {
+        console.error("❌ حدث خطأ:", err);
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', injectDynamicPixel);
+  </script>
 </head>
 <body>
-  <header class="main-header p-2 d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center">
-      <a href="index.html" style="text-decoration:none;display:flex;align-items:center;color:inherit;">
-        <img id="store-logo" src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="شعار المتجر" width="50" height="50" class="me-2">
-        <h1 id="store-name" class="h3 m-0" style="color:inherit;">متجري</h1>
-      </a>
-    </div>
-  </header>
+
   <main class="container py-5 px-3">
     <div class="row" id="landing-page-content">
       <!-- سيتم تعبئة محتوى صفحة الهبوط ديناميكياً -->
@@ -1302,6 +1509,10 @@
     import { supabase, createOrder } from './server-superbase.js';
     window.createOrder = createOrder;
     let statesData = [];
+    let colors = [];
+    let sizes = [];
+    let offers = [];
+    let landingPageData = null;
     
     // دالة لجلب إعدادات المتجر وتطبيقها
     async function loadStoreSettings() {
@@ -1312,24 +1523,103 @@
         .single();
 
       if (!error && data) {
-        // تطبيق لون الأزرار
-        if (data.btncolor) {
+        // تطبيق لون الهيدر
+        if (data.headercolor) {
+          document.documentElement.style.setProperty('--header-color', data.headercolor);
           const style = document.createElement('style');
           style.textContent = `
-            :root {
-              --btn-color: ${data.btncolor};
-            }
-            .btn-main {
-              background: ${data.btncolor} !important;
+            .main-header {
+              background: ${data.headercolor} !important;
               color: #fff !important;
+            }
+            .main-header h1, .main-header span {
+              color: #fff !important;
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        // تطبيق ألوان الأزرار الجديدة
+        if (data.btncolor) {
+          let backgroundColor = '#007bff';
+          let textColor = '#ffffff';
+          
+          if (typeof data.btncolor === 'object') {
+            backgroundColor = data.btncolor.backgroundColor || '#007bff';
+            textColor = data.btncolor.textColor || '#ffffff';
+          } else if (typeof data.btncolor === 'string') {
+            // للتوافق مع البيانات القديمة
+            backgroundColor = data.btncolor;
+            textColor = '#ffffff';
+          }
+          
+          document.documentElement.style.setProperty('--btn-color', backgroundColor);
+          document.documentElement.style.setProperty('--btn-text-color', textColor);
+          
+          const style = document.createElement('style');
+          style.textContent = `
+            .btn-main, .modern-submit-btn {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
               border-radius: 25px;
               font-weight: bold;
               transition: background 0.2s;
             }
-            .btn-main:hover {
-              background: ${data.btncolor} !important;
-              color: #fff !important;
+            .btn-main:hover, .modern-submit-btn:hover {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
               opacity: 0.9;
+            }
+            .modern-quantity-btn {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
+              border-color: ${backgroundColor} !important;
+            }
+            .modern-quantity-btn:hover {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
+              opacity: 0.9;
+            }
+            .modern-radio-item input[type="radio"]:checked + label {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
+              border-color: ${backgroundColor} !important;
+            }
+            .modern-size-option input[type="radio"]:checked + label {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
+              border-color: ${backgroundColor} !important;
+            }
+            .modern-color-option input[type="radio"]:checked + label {
+              border-color: ${backgroundColor} !important;
+            }
+            .mobile-price-status {
+              background: ${backgroundColor} !important;
+              color: ${textColor} !important;
+              border-color: ${backgroundColor} !important;
+            }
+            .mobile-price-status h4 {
+              color: ${textColor} !important;
+            }
+            .mobile-price-status .badge {
+              color: ${backgroundColor} !important;
+              background: ${textColor} !important;
+            }
+            .modern-form-container {
+              border-color: ${backgroundColor} !important;
+            }
+            .modern-form-container::before {
+              background: ${backgroundColor} !important;
+            }
+            .modern-form-container input:focus,
+            .modern-form-container select:focus {
+              border-color: ${backgroundColor} !important;
+            }
+            .form-section-title::before {
+              background: ${backgroundColor} !important;
+            }
+            .modern-summary-item:last-child {
+              color: ${backgroundColor} !important;
             }
           `;
           document.head.appendChild(style);
@@ -1337,8 +1627,7 @@
         
         // تطبيق لون النص
         if (data.textcolor) {
-          document.body.style.color = data.textcolor;
-          // تطبيق لون النص على جميع العناصر
+          document.documentElement.style.setProperty('--text-color', data.textcolor);
           const style = document.createElement('style');
           style.textContent = `
             body, h1, h2, h3, h4, h5, h6, p, span, div, label, input, select, textarea, button, a {
@@ -1353,7 +1642,7 @@
             .modern-summary h5, .modern-summary-item {
               color: ${data.textcolor} !important;
             }
-            .main-header h1, .main-footer {
+            .main-footer {
               color: ${data.textcolor} !important;
             }
             .special-offer h5, .special-offer .list-group-item {
@@ -1361,9 +1650,6 @@
             }
             .alert {
               color: ${data.textcolor} !important;
-            }
-            .btn-main, .modern-submit-btn {
-              color: #fff !important;
             }
             .badge {
               color: inherit !important;
@@ -1385,12 +1671,6 @@
             }
             .modern-color-option label {
               color: ${data.textcolor} !important;
-            }
-            .mobile-price-status h4 {
-              color: #fff !important;
-            }
-            .mobile-price-status .badge {
-              color: var(--btn-color, #007bff) !important;
             }
           `;
           document.head.appendChild(style);
@@ -1432,31 +1712,7 @@
         return;
       }
       
-      // جلب كود البيكسل إذا كان المنتج مرتبط ببيكسل
-      let pixelCode = '';
-      if (data.pixel) {
-        try {
-          const { data: pixelData, error: pixelError } = await supabase
-            .from('ad_pixels')
-            .select('pixel_code')
-            .eq('id', data.pixel)
-            .single();
-          
-          if (!pixelError && pixelData) {
-            pixelCode = pixelData.pixel_code;
-            // إضافة كود البيكسل إلى الهيدر
-            if (pixelCode) {
-              const head = document.head;
-              const pixelScript = document.createElement('script');
-              pixelScript.innerHTML = pixelCode;
-              head.appendChild(pixelScript);
-              console.log('تم إضافة كود البيكسل بنجاح');
-            }
-          }
-        } catch (pixelError) {
-          console.error('خطأ في جلب كود البيكسل:', pixelError);
-        }
-      }
+      
       
       let image = 'https://via.placeholder.com/500x350';
       try {
@@ -1474,14 +1730,17 @@
         }
       }
       
-      let offers = [];
       try { offers = data.offers ? JSON.parse(data.offers) : []; } catch(e) { offers = []; }
       
       // استرجاع الألوان والقياسات إذا وجدت
-      let colors = [];
-      let sizes = [];
       try { colors = data.colors ? JSON.parse(data.colors) : []; } catch(e) { colors = []; }
       try { sizes = data.sizes ? JSON.parse(data.sizes) : []; } catch(e) { sizes = []; }
+      
+      // تخزين البيانات عالمياً
+      window.colors = colors;
+      window.sizes = sizes;
+      window.offers = offers;
+      window.landingPageData = data;
       
       // بناء HTML لاختيارات الألوان
       let colorSelectHtml = '';
@@ -1531,11 +1790,11 @@
         <div class="col-12">
           <div class="modern-form-container">
             <form id="order-form">
-              <!-- اختيارات الألوان والمقاسات في سطر واحد -->
+              <!-- اختيارات الألوان والمقاسات -->
               ${colors.length > 0 || sizes.length > 0 ? `
-              <div class="modern-color-size-row">
+              <div class="row">
                 ${colors.length > 0 ? `
-                <div class="modern-color-section">
+                <div class="col-6">
                   <div class="form-section-title">🎨 اختر اللون</div>
                   <div class="modern-color-options">
                     ${colors.map((c, idx) => `
@@ -1548,7 +1807,7 @@
                 </div>
                 ` : ''}
                 ${sizes.length > 0 ? `
-                <div class="modern-size-section">
+                <div class="col-6">
                   <div class="form-section-title">📏 اختر المقاس</div>
                   <div class="modern-size-options">
                     ${sizes.map((s, idx) => `
@@ -1562,7 +1821,6 @@
                 ` : ''}
               </div>
               ` : ''}
-              
               
               <div class="modern-input-group">
                 <label for="fullName">الاسم الكامل</label>
@@ -1633,7 +1891,6 @@
               </div>
               ` : ''}
               
-              
               <!-- اختيار الكمية -->
               <div class="form-section-title">📦 الكمية</div>
               <div class="modern-quantity-selector">
@@ -1662,10 +1919,6 @@
                   <span id="summary-total">${data.price} دج</span>
                 </div>
               </div>
-              
-              <button type="submit" class="modern-submit-btn" ${data.available === false ? 'disabled' : ''}>
-                ${data.available === false ? '❌ المنتج غير متوفر' : '🛒 اطلب الآن'}
-              </button>
             </form>
           </div>
         </div>
@@ -1673,22 +1926,20 @@
       `;
       
       // بعد عرض الفورم، جلب الولايات وتحديث ملخص الطلبية
-      loadStatesAndHandleSummary(data.price, offers);
+      loadStatesAndHandleSummary(window.landingPageData.price, window.offers);
       
-      // تنفيذ أحداث البيكسل عند تحميل صفحة الهبوط
-      triggerViewContentEvents(data);
-      
-      // إضافة حدث تغيير الكمية لتنفيذ أحداث البيكسل
-      const quantityInput = document.getElementById('quantity');
-      if (quantityInput) {
-        quantityInput.addEventListener('change', function() {
-          const quantity = parseInt(this.value) || 1;
-          triggerAddToCartEvents(data, quantity);
+      // إضافة أحداث النموذج
+      const orderForm = document.getElementById('order-form');
+      if (orderForm) {
+        orderForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          await handleOrderSubmit(orderForm);
         });
       }
       
+      
       // دالة معالجة إرسال الطلب
-      async function handleOrderSubmit(orderForm) {
+      window.handleOrderSubmit = async function(orderForm) {
         // التحقق من صحة البيانات الأساسية
         const full_name = orderForm.querySelector('#fullName').value.trim();
         const phone_number = orderForm.querySelector('#phonenumber').value.trim();
@@ -1696,17 +1947,10 @@
         const state_id = orderForm.querySelector('#state').value;
         const shipping_type = orderForm.querySelector('input[name="shippingType"]:checked')?.value;
         
-        // التحقق من الاسم الكامل
-        if (!full_name) {
-          alert('يرجى إدخال الاسم الكامل');
-          orderForm.querySelector('#fullName').focus();
-          orderForm.querySelector('#fullName').scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return false;
-        }
+
         
         // التحقق من رقم الهاتف
         if (!phone_number) {
-          alert('يرجى إدخال رقم الهاتف');
           orderForm.querySelector('#phonenumber').focus();
           orderForm.querySelector('#phonenumber').scrollIntoView({ behavior: 'smooth', block: 'center' });
           return false;
@@ -1714,7 +1958,6 @@
         
         // التحقق من العنوان
         if (!address) {
-          alert('يرجى إدخال العنوان');
           orderForm.querySelector('#address').focus();
           orderForm.querySelector('#address').scrollIntoView({ behavior: 'smooth', block: 'center' });
           return false;
@@ -1722,7 +1965,6 @@
         
         // التحقق من اختيار الولاية
         if (!state_id) {
-          alert('يرجى اختيار الولاية');
           orderForm.querySelector('#state').focus();
           orderForm.querySelector('#state').scrollIntoView({ behavior: 'smooth', block: 'center' });
           return false;
@@ -1730,7 +1972,6 @@
         
         // التحقق من نوع الشحن
         if (!shipping_type) {
-          alert('يرجى اختيار نوع الشحن');
           const shippingInputs = orderForm.querySelectorAll('input[name="shippingType"]');
           if (shippingInputs.length > 0) {
             shippingInputs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1739,8 +1980,7 @@
         }
         
         // التحقق من اختيار اللون إذا كان مطلوباً
-        if (colors.length > 0 && !orderForm.querySelector('input[name="colorRadio"]:checked')) {
-          alert('يرجى اختيار اللون');
+        if (window.colors.length > 0 && !orderForm.querySelector('input[name="colorRadio"]:checked')) {
           const colorOptions = orderForm.querySelector('.modern-color-options');
           if (colorOptions) {
             colorOptions.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1749,8 +1989,7 @@
         }
         
         // التحقق من اختيار المقاس إذا كان مطلوباً
-        if (sizes.length > 0 && !orderForm.querySelector('input[name="sizeRadio"]:checked')) {
-          alert('يرجى اختيار المقاس');
+        if (window.sizes.length > 0 && !orderForm.querySelector('input[name="sizeRadio"]:checked')) {
           const sizeOptions = orderForm.querySelector('.modern-size-options');
           if (sizeOptions) {
             sizeOptions.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1763,18 +2002,18 @@
         
         // جمع بيانات اللون
         let color = '', color_hex = '';
-        if (colors.length > 0) {
+        if (window.colors.length > 0) {
           const colorRadio = orderForm.querySelector('input[name="colorRadio"]:checked');
           if (colorRadio) {
             color = colorRadio.value;
-            const cObj = colors.find(c => c.name === color);
+            const cObj = window.colors.find(c => c.name === color);
             color_hex = cObj ? cObj.hex : '';
           }
         }
         
         // جمع بيانات المقاس
         let size = '';
-        if (sizes.length > 0) {
+        if (window.sizes.length > 0) {
           const sizeRadio = orderForm.querySelector('input[name="sizeRadio"]:checked');
           if (sizeRadio) size = sizeRadio.value;
         }
@@ -1782,13 +2021,13 @@
         // جمع بيانات العرض الخاص
         let offer_label = '';
         let offerIdx = '';
-        let product_price = data.price;
+        let product_price = window.landingPageData.price;
         
-        if (offers.length > 0) {
+        if (window.offers.length > 0) {
           const offerRadio = orderForm.querySelector('input[name="offerRadio"]:checked');
           if (offerRadio && offerRadio.value !== '') {
             offerIdx = offerRadio.value;
-            const offer = offers[offerIdx];
+            const offer = window.offers[offerIdx];
             if (offer) {
               offer_label = `${offer.qty} قطعة بـ ${offer.price} دج`;
               product_price = offer.price / offer.qty;
@@ -1820,9 +2059,9 @@
         
         // إرسال الطلب
         const orderObj = {
-          product_id: data.id,
-          product_name: data.name,
-          product_image: data.image,
+          product_id: window.landingPageData.id,
+          product_name: window.landingPageData.name,
+          product_image: window.landingPageData.image,
           full_name,
           phone_number,
           address,
@@ -1847,8 +2086,6 @@
           alert('حدث خطأ أثناء إرسال الطلب: ' + error.message);
           return false;
         } else {
-          // تنفيذ أحداث البيكسل عند نجاح الطلب
-          triggerPixelEvents(data, orderObj);
           
           // إظهار مودال النجاح
           const successModal = document.getElementById('success-modal');
@@ -1858,146 +2095,6 @@
           
           return true;
         }
-      }
-      
-      // إضافة أحداث النموذج
-      const orderForm = document.getElementById('order-form');
-      if (orderForm) {
-        orderForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          await handleOrderSubmit(orderForm);
-        });
-      }
-    }
-    
-    // دوال تنفيذ أحداث البيكسل
-    function triggerViewContentEvents(productData) {
-      try {
-        // تنفيذ أحداث فيسبوك بيكسل
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'ViewContent', {
-            content_name: productData.name,
-            content_category: 'landing_page',
-            content_ids: [productData.id],
-            value: productData.price,
-            currency: 'DZD'
-          });
-        }
-        
-        // تنفيذ أحداث تيك توك بيكسل
-        if (typeof ttq !== 'undefined') {
-          ttq.track('ViewContent', {
-            content_name: productData.name,
-            content_category: 'landing_page',
-            content_id: productData.id,
-            value: productData.price,
-            currency: 'DZD'
-          });
-        }
-        
-        // تنفيذ أحداث جوجل تاج
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'view_item', {
-            currency: 'DZD',
-            value: productData.price,
-            items: [{
-              item_id: productData.id,
-              item_name: productData.name,
-              price: productData.price
-            }]
-          });
-        }
-      } catch (error) {
-        console.error('خطأ في تنفيذ أحداث عرض صفحة الهبوط:', error);
-      }
-    }
-    
-    function triggerAddToCartEvents(productData, quantity = 1) {
-      try {
-        // تنفيذ أحداث فيسبوك بيكسل
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'AddToCart', {
-            content_name: productData.name,
-            content_category: 'landing_page',
-            content_ids: [productData.id],
-            value: productData.price * quantity,
-            currency: 'DZD',
-            num_items: quantity
-          });
-        }
-        
-        // تنفيذ أحداث تيك توك بيكسل
-        if (typeof ttq !== 'undefined') {
-          ttq.track('AddToCart', {
-            content_name: productData.name,
-            content_category: 'landing_page',
-            content_id: productData.id,
-            value: productData.price * quantity,
-            currency: 'DZD',
-            quantity: quantity
-          });
-        }
-        
-        // تنفيذ أحداث جوجل تاج
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'add_to_cart', {
-            currency: 'DZD',
-            value: productData.price * quantity,
-            items: [{
-              item_id: productData.id,
-              item_name: productData.name,
-              price: productData.price,
-              quantity: quantity
-            }]
-          });
-        }
-      } catch (error) {
-        console.error('خطأ في تنفيذ أحداث إضافة صفحة الهبوط إلى السلة:', error);
-      }
-    }
-    
-    function triggerPixelEvents(productData, orderData) {
-      try {
-        // تنفيذ أحداث فيسبوك بيكسل
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'Purchase', {
-            value: orderData.total_price,
-            currency: 'DZD',
-            content_name: productData.name,
-            content_category: 'landing_page',
-            content_ids: [productData.id],
-            num_items: orderData.quantity
-          });
-        }
-        
-        // تنفيذ أحداث تيك توك بيكسل
-        if (typeof ttq !== 'undefined') {
-          ttq.track('Purchase', {
-            value: orderData.total_price,
-            currency: 'DZD',
-            content_name: productData.name,
-            content_category: 'landing_page',
-            content_id: productData.id,
-            quantity: orderData.quantity
-          });
-        }
-        
-        // تنفيذ أحداث جوجل تاج
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'purchase', {
-            transaction_id: Date.now().toString(),
-            value: orderData.total_price,
-            currency: 'DZD',
-            items: [{
-              item_id: productData.id,
-              item_name: productData.name,
-              quantity: orderData.quantity,
-              price: orderData.product_price
-            }]
-          });
-        }
-      } catch (error) {
-        console.error('خطأ في تنفيذ أحداث البيكسل:', error);
       }
     }
     
@@ -2114,22 +2211,24 @@
         quantityDisplay.textContent = newQuantity;
         
         // تحديث ملخص الطلبية
-        updateSummary();
+        if (window.updateSummary) {
+          window.updateSummary();
+        }
       }
     }
     
     // دالة إرسال الطلب من الزر الثابت
     window.submitOrderFromFixedButton = async function() {
-      const orderForm = document.getElementById('order-form');
-      if (orderForm) {
+      const orderFormElement = document.getElementById('order-form');
+      if (orderFormElement) {
         // التمرير إلى النموذج أولاً
-        orderForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        orderFormElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         
         // انتظار قليل للسماح بانتهاء التمرير قبل التحقق من صحة البيانات
         await new Promise(resolve => setTimeout(resolve, 500));
         
         // ثم محاولة إرسال النموذج
-        const result = await handleOrderSubmit(orderForm);
+        const result = await window.handleOrderSubmit(orderFormElement);
         
         // إذا نجح الإرسال، إخفاء الزر الثابت
         if (result !== false) {
