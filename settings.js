@@ -9,6 +9,12 @@ async function saveSettings() {
     const btnTextColorElement = document.getElementById('main-btn-text');
     const textColorElement = document.getElementById('main-text');
     const logoInput = document.getElementById('store-logo');
+    
+    // عناصر وسائل التواصل الاجتماعي
+    const facebookUrlElement = document.getElementById('facebook-url');
+    const instagramUrlElement = document.getElementById('instagram-url');
+    const whatsappUrlElement = document.getElementById('whatsapp-url');
+    const tiktokUrlElement = document.getElementById('tiktok-url');
 
     // التحقق من وجود العناصر
     if (!nameElement || !headerColorElement || !btnColorElement || !btnTextColorElement || !textColorElement) {
@@ -20,6 +26,12 @@ async function saveSettings() {
     const btncolor = btnColorElement.value;
     const btnTextColor = btnTextColorElement.value;
     const textcolor = textColorElement.value;
+    
+    // روابط وسائل التواصل الاجتماعي
+    const facebookUrl = facebookUrlElement ? facebookUrlElement.value.trim() : '';
+    const instagramUrl = instagramUrlElement ? instagramUrlElement.value.trim() : '';
+    const whatsappUrl = whatsappUrlElement ? whatsappUrlElement.value.trim() : '';
+    const tiktokUrl = tiktokUrlElement ? tiktokUrlElement.value.trim() : '';
 
     // إنشاء كائن JSONB للأزرار
     const buttonColors = {
@@ -119,7 +131,11 @@ async function saveSettings() {
       name: name.trim(),
       headercolor: headercolor || '#007bff',
       btncolor: buttonColors, // الآن JSONB object مع لون الخلفية ولون النص
-      textcolor: textcolor || '#000000'
+      textcolor: textcolor || '#000000',
+      facebook_url: facebookUrl || null,
+      instagram_url: instagramUrl || null,
+      whatsapp_url: whatsappUrl || null,
+      tiktok_url: tiktokUrl || null
     };
 
          if (logoUrl) {
@@ -366,6 +382,12 @@ async function loadSettings() {
     const btnTextColorElement = document.getElementById('main-btn-text');
     const textColorElement = document.getElementById('main-text');
     const logoPreviewElement = document.getElementById('logo-preview');
+    
+    // عناصر وسائل التواصل الاجتماعي
+    const facebookUrlElement = document.getElementById('facebook-url');
+    const instagramUrlElement = document.getElementById('instagram-url');
+    const whatsappUrlElement = document.getElementById('whatsapp-url');
+    const tiktokUrlElement = document.getElementById('tiktok-url');
 
     if (nameElement) nameElement.value = data.name || '';
     if (headerColorElement) headerColorElement.value = data.headercolor || '';
@@ -403,9 +425,15 @@ async function loadSettings() {
          console.warn('رابط الصورة لا يحتوي على المسار المطلوب /logo/');
          logoPreviewElement.style.display = 'none';
        }
-     } else if (logoPreviewElement) {
-       logoPreviewElement.style.display = 'none';
-     }
+         } else if (logoPreviewElement) {
+      logoPreviewElement.style.display = 'none';
+    }
+    
+    // تعبئة روابط وسائل التواصل الاجتماعي
+    if (facebookUrlElement) facebookUrlElement.value = data.facebook_url || '';
+    if (instagramUrlElement) instagramUrlElement.value = data.instagram_url || '';
+    if (whatsappUrlElement) whatsappUrlElement.value = data.whatsapp_url || '';
+    if (tiktokUrlElement) tiktokUrlElement.value = data.tiktok_url || '';
     
     // تطبيق لون الأزرار
     if (data.btncolor) {
