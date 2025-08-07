@@ -2096,90 +2096,144 @@
     }
     
   </style>
-  <script type="module" src="server-superbase.js"></script>
-  <script type="module">
-    import { supabase } from './server-superbase.js';
+<script type="module" src="server-superbase.js"></script>
+<script type="module">
+  import { supabase } from './server-superbase.js';
 
-// استخراج معرف المنتج من الرابط
-const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get("id");
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get("id");
 
-async function injectDynamicPixel() {
-  if (!productId) return;
+  async function injectDynamicPixel() {
+    if (!productId) return;
 
-  try {
-    // 1. جلب معرف البيكسل المرتبط بالمنتج
-    const { data: product, error: productError } = await supabase
-      .from('products')
-      .select('pixel')
-      .eq('id', productId)
-      .single();
-
-    if (productError || !product?.pixel) {
-      console.warn("لا يوجد بيكسل مرتبط بهذا المنتج");
-      return;
-    }
-
-    const pixelId = product.pixel;
-
-    // 2. جلب بيانات البيكسل من جدول ad_pixels
-    const { data: pixelData, error: pixelError } = await supabase
-      .from('ad_pixels')
-      .select('id, pixel_name, pixel_code')
-      .eq('id', pixelId)
-      .single();
-
-    if (pixelError || !pixelData) {
-      console.error("خطأ في جلب بيانات البيكسل:", pixelError?.message || "بيانات غير موجودة");
-      return;
-    }
-
-    // 3. معالجة بيانات البيكسل (JSONB)
-    let pixelType, pixelCode;
     try {
-      const parsedCode = typeof pixelData.pixel_code === 'string' 
-        ? JSON.parse(pixelData.pixel_code) 
-        : pixelData.pixel_code;
-      
-      pixelType = parsedCode.type;
-      pixelCode = parsedCode.code;
-      
-      if (!pixelType || !pixelCode) {
-        throw new Error("بيانات البيكسل غير مكتملة");
+      // جلب المنتج
+      const { data: product, error: productError } = await supabase
+        .from('products')
+        .select('pixel')
+        .eq('id', productId)
+        .single();
+
+      if (productError || !product?.pixel) {
+        console.warn("لا يوجد بيكسل مرتبط بهذا المنتج");
+        return;
       }
-    } catch (e) {
-      console.error("خطأ في تحليل كود البيكسل:", e.message);
-      return;
+
+      const pixelId = product.pixel;
+
+      // جلب كود البيكسل
+      const { data: pixelData, error: pixelError } = await supabase
+        .from('ad_pixels')
+        .select('id, pixel_name, pixel_code')
+        .eq('id', pixelId)
+        .single();
+
+      if (pixelError || !pixelData) {
+        console.error("خطأ في جلب بيانات البيكسل:", pixelError?.message || "بيانات غير موجودة");
+        return;
+      }
+
+      // تحليل JSONB
+      let pixelType, pixelCode;
+      try {
+        const parsed = typeof pixelData.pixel_code === 'string'
+          ? JSON.parse(pixelData.pixel_code)
+          : pixelData.pixel_code;
+
+        pixelType = parsed.type;
+        pixelCode = parsed.code;
+
+        if (!pixelType || !pixelCode) throw new Error("البيانات ناقصة");
+      } catch (e) {
+        console.error("خطأ في تحليل JSON البيكسل:", e.message);
+        return;
+      }
+
+      console.log("🚀 نوع البيكسل:", pixelType, " | كود:", pixelCode);
+
+      // تفعيل البيكسل حسب النوع
+      if (pixelType === 'facebook_pixel') {
+        // تعريف fbq قبل تحميل أي سكريبت
+        window.fbq = window.fbq || function() {
+          (window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments));
+        };
+        window.fbq.push = window.fbq;
+        window.fbq.loaded = true;
+        window.fbq.version = '2.0';
+        window.fbq.queue = [];
+
+        // تهيئة البيكسل فوراً
+        window.fbq('init', pixelCode);
+        console.log('🔧 تم تهيئة Facebook Pixel:', pixelCode);
+
+        // تحميل Facebook Pixel SDK
+        const fbScript = document.createElement('script');
+        fbScript.src = 'https://connect.facebook.net/en_US/fbevents.js';
+        fbScript.async = true;
+        document.head.appendChild(fbScript);
+
+        fbScript.onload = () => {
+          try {
+            // تتبع PageView
+            window.fbq('track', 'PageView');
+            console.log('📊 تم تتبع PageView');
+            
+            // تتبع ViewContent مع بيانات المنتج
+            window.fbq('track', 'ViewContent', {
+              content_type: 'product',
+              content_ids: [productId],
+              content_name: 'Product View',
+              value: 0,
+              currency: 'USD'
+            });
+            console.log('🛍️ تم تتبع ViewContent للمنتج:', productId);
+
+            // إضافة فحص إضافي للتأكد من إرسال البيانات
+            setTimeout(() => {
+              console.log('🔍 فحص حالة Facebook Pixel...');
+              if (window.fbq && window.fbq.queue) {
+                console.log('✅ Facebook Pixel يعمل بشكل صحيح');
+              } else {
+                console.warn('⚠️ Facebook Pixel قد لا يعمل بشكل صحيح');
+              }
+            }, 2000);
+
+            console.log('✅ Facebook Pixel تم تهيئته بنجاح:', pixelCode);
+          } catch (error) {
+            console.error('❌ خطأ في تهيئة Facebook Pixel:', error);
+          }
+        };
+      }
+
+      else if (pixelType === 'tiktok_pixel') {
+        // تعريف ttq كمتغير عام أولاً
+        window.ttq = window.ttq || [];
+        
+        const ttScript = document.createElement('script');
+        ttScript.src = 'https://analytics.tiktok.com/i18n/pixel/sdk.js?sdkid=' + pixelCode + '&lib=ttq';
+        ttScript.async = true;
+        document.head.appendChild(ttScript);
+
+        ttScript.onload = () => {
+          // التأكد من وجود ttq قبل استخدامه
+          if (window.ttq && Array.isArray(window.ttq)) {
+            window.ttq.push(['init', pixelCode]);
+            window.ttq.push(['track', 'PageView']);
+            window.ttq.push(['track', 'ViewContent']);
+          }
+        };
+      }
+
+      // يمكن إضافة أنواع أخرى هنا (Google, Snapchat, إلخ)
+
+    } catch (err) {
+      console.error("❌ حدث خطأ:", err);
     }
-
-    console.log("نوع البيكسل:", pixelType, "| كود البيكسل:", pixelCode);
-
-    // 4. حقن كود التتبع حسب النوع
-    if (pixelType === 'facebook_pixel') {
-      // كود فيسبوك بكسل
-      !function(f,b,e,v,n,t,s){
-        if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)
-      }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-      
-      fbq('init', pixelCode);
-      fbq('track', 'PageView');
-      fbq('track', 'ViewContent');
-    }
-    // يمكن إضافة أنواع أخرى من البيكسلات هنا
-
-  } catch (error) {
-    console.error("حدث خطأ غير متوقع:", error);
   }
-}
 
-// تشغيل الدالة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', injectDynamicPixel);
-  </script>
+  document.addEventListener('DOMContentLoaded', injectDynamicPixel);
+</script>
+  
 </head>
 <body>
   
@@ -2827,183 +2881,6 @@ document.addEventListener('DOMContentLoaded', injectDynamicPixel);
               color: ${backgroundColor} !important;
             }
             .info-message {
-              border-color: ${backgroundColor} !important;
-              color: ${backgroundColor} !important;
-            }
-            /* تطبيق الألوان على زر إرسال الطلب والسعر */
-            .modern-submit-btn {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              border-color: ${backgroundColor} !important;
-            }
-            .modern-submit-btn:hover {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              opacity: 0.9;
-            }
-            .modern-submit-btn:focus {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
-            }
-            .modern-submit-btn:disabled {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              opacity: 0.6;
-            }
-            .desktop-submit-btn .modern-submit-btn {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              border-color: ${backgroundColor} !important;
-            }
-            .desktop-submit-btn .modern-submit-btn:hover {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              opacity: 0.9;
-            }
-            .mobile-submit-btn .modern-submit-btn {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              border-color: ${backgroundColor} !important;
-            }
-            .mobile-submit-btn .modern-submit-btn:hover {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              opacity: 0.9;
-            }
-            /* تطبيق الألوان على عنصر السعر */
-            #product-price {
-              color: ${backgroundColor} !important;
-            }
-            #product-price-desktop {
-              color: ${backgroundColor} !important;
-            }
-            #summary-product-price {
-              color: ${backgroundColor} !important;
-            }
-            #summary-product-price-mobile {
-              color: ${backgroundColor} !important;
-            }
-            .text-white #product-price {
-              color: ${textColor} !important;
-            }
-            .text-success #product-price-desktop {
-              color: ${backgroundColor} !important;
-            }
-            /* تطبيق الألوان على كونتينر السعر */
-            .price-display-container {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .price-display-container h4 {
-              color: ${textColor} !important;
-            }
-            .price-display-container span {
-              color: ${textColor} !important;
-            }
-            /* تطبيق الألوان على جميع عناصر السعر */
-            .price-element {
-              color: ${backgroundColor} !important;
-            }
-            .price-container {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .price-container h4,
-            .price-container span {
-              color: ${textColor} !important;
-            }
-            /* تطبيق الألوان على عناصر إضافية */
-            .submit-button-container {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .submit-button-container button {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              border-color: ${backgroundColor} !important;
-            }
-            .submit-button-container button:hover {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-              opacity: 0.9;
-            }
-            /* تطبيق الألوان على عناصر النموذج */
-            .order-form-container {
-              border: 2px solid ${backgroundColor} !important;
-            }
-            .order-form-container .card-header {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .customer-form-container {
-              border: 2px solid ${backgroundColor} !important;
-            }
-            .customer-form-container .card-header {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .summary-container {
-              border: 2px solid ${backgroundColor} !important;
-            }
-            .summary-container .card-header {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            /* تطبيق الألوان على عناصر إضافية في النموذج */
-            .form-section {
-              border-left: 3px solid ${backgroundColor} !important;
-            }
-            .form-section-header {
-              color: ${backgroundColor} !important;
-            }
-            .form-section-content {
-              border-top: 1px solid ${backgroundColor} !important;
-            }
-            /* تطبيق الألوان على عناصر التحديد */
-            .selection-container {
-              border: 2px solid ${backgroundColor} !important;
-            }
-            .selection-container .card-header {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .selection-option.selected {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .selection-option:hover {
-              border-color: ${backgroundColor} !important;
-            }
-            /* تطبيق الألوان على عناصر الملخص */
-            .summary-item {
-              border-bottom: 1px solid ${backgroundColor} !important;
-            }
-            .summary-total {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .summary-total h5,
-            .summary-total span {
-              color: ${textColor} !important;
-            }
-            /* تطبيق الألوان على عناصر الرسائل */
-            .message-container {
-              border: 2px solid ${backgroundColor} !important;
-            }
-            .message-container.success {
-              background: ${backgroundColor} !important;
-              color: ${textColor} !important;
-            }
-            .message-container.error {
-              border-color: ${backgroundColor} !important;
-              color: ${backgroundColor} !important;
-            }
-            .message-container.warning {
-              border-color: ${backgroundColor} !important;
-              color: ${backgroundColor} !important;
-            }
-            .message-container.info {
               border-color: ${backgroundColor} !important;
               color: ${backgroundColor} !important;
             }
