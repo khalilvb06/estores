@@ -2418,7 +2418,11 @@
     let offers = [];
     let productPrice = 0;
 
-    
+     // إظهار مودل التحميل
+      const loadingModal = document.getElementById('loading-modal');
+      if (loadingModal) {
+        loadingModal.style.display = 'flex';
+      }
       // إخفاء مودل التحميل بعد 3 ثواني
       setTimeout(() => {
         if (loadingModal) {
