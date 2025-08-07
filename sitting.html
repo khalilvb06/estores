@@ -89,6 +89,14 @@
       border: none;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
+    
+    .main-footer {
+            background: black !important;
+            color: rgb(255, 255, 255) !important;
+            border-radius: 25px 25px 0 0;
+            box-shadow: 0 -4px 20px rgba(102,126,234,0.08);
+        }
+    
     @media (max-width: 767px) {
       .form-control-color {
         width: 50px;
@@ -117,6 +125,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="addLandingPage.html"><span>📄</span> صفحات الهبوط</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="categories.html"><span>🏷️</span> التصنيفات</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="orders.html"><span>🛒</span> الطلبات</a>
@@ -184,6 +195,46 @@
             <label for="main-text" class="form-label">لون النصوص العامة</label>
             <input type="color" class="form-control form-control-color" id="main-text" value="#222222">
           </div>
+          
+          <!-- قسم وسائل التواصل الاجتماعي -->
+          <div class="card mt-4 mb-3">
+            <div class="card-header bg-light">
+              <h5 class="mb-0"><i class="fas fa-share-alt"></i> روابط وسائل التواصل الاجتماعي</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="facebook-url" class="form-label">
+                    <i class="fab fa-facebook text-primary"></i> رابط صفحة الفيسبوك
+                  </label>
+                  <input type="url" class="form-control" id="facebook-url" placeholder="https://facebook.com/yourpage">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="instagram-url" class="form-label">
+                    <i class="fab fa-instagram text-danger"></i> رابط حساب الانستقرام
+                  </label>
+                  <input type="url" class="form-control" id="instagram-url" placeholder="https://instagram.com/yourusername">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="whatsapp-url" class="form-label">
+                    <i class="fab fa-whatsapp text-success"></i> رقم الواتساب
+                  </label>
+                  <input type="text" class="form-control" id="whatsapp-url" placeholder="+213XXXXXXXXX">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="tiktok-url" class="form-label">
+                    <i class="fab fa-tiktok text-dark"></i> رابط حساب التيك توك
+                  </label>
+                  <input type="url" class="form-control" id="tiktok-url" placeholder="https://tiktok.com/@yourusername">
+                </div>
+              </div>
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>ملاحظة:</strong> إذا لم تضع رابطاً لموقع معين، لن تظهر أيقونته في الفوتر.
+              </div>
+            </div>
+          </div>
+          
           <div class="text-center">
             <button type="submit" class="btn btn-main" id="save-settings-btn">💾 حفظ الإعدادات</button>
             <a href="dashboard.html" class="btn btn-secondary ms-2">🏠 عودة للرئيسية</a>
@@ -192,8 +243,13 @@
       </div>
     </div>
   </main>
-  <footer class="main-footer text-center p-3 mt-5">
-    جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
+  <footer class="main-footer text-center py-3 mt-5">
+    <div class="container">
+      <p class="mb-0">
+        <i class="fas fa-heart text-danger me-1"></i>
+        جميع الحقوق محفوظة © 2024 متجر إلكتروني
+      </p>
+    </div>
   </footer>
 
   <!-- مودل نجاح حفظ الإعدادات -->
