@@ -4,6 +4,7 @@ import { protectAdminPages } from './auth-guard.js';
 
 // عناصر الصفحة
 const pixelNameInput = document.getElementById('pixelName');
+const pixelType = document.getElementById('pixelType');
 const pixelCodeInput = document.getElementById('pixelCode');
 const pixelTableBody = document.getElementById('pixelTableBody');
 const pixelForm = document.getElementById('pixelForm');
@@ -16,11 +17,20 @@ let editingId = null;
 function openAdModal(pixel = null) {
   if (pixel) {
     pixelNameInput.value = pixel.pixel_name;
-    pixelCodeInput.value = pixel.pixel_code;
+    // إذا كان الكود مخزن كـ JSON، نقوم بتحليله واستخراج النوع والكود
+    let codeObj;
+    try {
+      codeObj = typeof pixel.pixel_code === 'string' ? JSON.parse(pixel.pixel_code) : pixel.pixel_code;
+    } catch (e) {
+      codeObj = { type: '', code: '' };
+    }
+    pixelType.value = codeObj.type || '';
+    pixelCodeInput.value = codeObj.code || '';
     editingId = pixel.id;
     document.getElementById('addPixelLabel').textContent = 'تعديل بيكسل';
   } else {
     pixelNameInput.value = '';
+    pixelType.value = '';
     pixelCodeInput.value = '';
     editingId = null;
     document.getElementById('addPixelLabel').textContent = 'إضافة بيكسل';
@@ -36,7 +46,10 @@ function closeAdModal() {
 async function savePixel(e) {
   if (e) e.preventDefault();
   const name = pixelNameInput.value.trim();
-  const code = pixelCodeInput.value.trim();
+  const code = JSON.stringify({
+    type: pixelType.value,
+    code: pixelCodeInput.value.trim()
+  });
   if (!name || !code) return alert('الرجاء ملء كل الحقول');
 
   try {
@@ -74,11 +87,29 @@ async function fetchPixels() {
 
   pixelTableBody.innerHTML = '';
   data.forEach((pixel, idx) => {
+    // التأكد من أن الحقل pixel_code كائن وليس نص
+    let pixelType = '';
+    let pixelCode = '';
+    if (typeof pixel.pixel_code === 'string') {
+      try {
+        const parsed = JSON.parse(pixel.pixel_code);
+        pixelType = parsed.type || '';
+        pixelCode = parsed.code || '';
+      } catch (e) {
+        pixelType = '';
+        pixelCode = pixel.pixel_code;
+      }
+    } else if (typeof pixel.pixel_code === 'object' && pixel.pixel_code !== null) {
+      pixelType = pixel.pixel_code.type || '';
+      pixelCode = pixel.pixel_code.code || '';
+    }
+
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${idx + 1}</td>
       <td>${pixel.pixel_name}</td>
-      <td><code>${pixel.pixel_code}</code></td>
+      <td>${pixelType}</td>
+      <td><code>${pixelCode}</code></td>
       <td>
         <button class='btn btn-sm btn-primary' onclick='window.editPixel(${JSON.stringify(pixel)})'>✏️ تعديل</button>
         <button class='btn btn-sm btn-danger' onclick='window.deletePixel(${pixel.id})'>🗑 حذف</button>
