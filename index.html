@@ -747,6 +747,81 @@
       }
     }
 
+    /* أنماط أيقونات وسائل التواصل الاجتماعي */
+    .social-media-icons {
+      margin-top: 1rem;
+    }
+
+    .social-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      margin: 0 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      padding: 5px;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      text-decoration: none;
+      background: #e9ecef; /* Slightly darker on hover */
+      color: #000; /* Keep black color on hover */
+    }
+
+    .facebook-icon {
+      background: #f8f9fa;
+    }
+
+    .facebook-icon:hover {
+      background: #e9ecef;
+      color: #000;
+    }
+
+    .instagram-icon {
+      background: #f8f9fa;
+    }
+
+    .instagram-icon:hover {
+      background: #e9ecef;
+      color: #000;
+    }
+
+    .whatsapp-icon {
+      background: #f8f9fa;
+    }
+
+    .whatsapp-icon:hover {
+      background: #e9ecef;
+      color: #000;
+    }
+
+    .tiktok-icon {
+      background: #f8f9fa;
+    }
+
+    .tiktok-icon:hover {
+      background: #e9ecef;
+      color: #000;
+    }
+
+    /* تحسين الأيقونات للهواتف */
+    @media (max-width: 576px) {
+      .social-icon {
+        width: 30px;
+        height: 30px;
+        margin: 0 5px;
+        padding: 3px;
+      }
+      .social-icon img {
+        width: 20px !important;
+        height: 20px !important;
+      }
+    }
+
     /* Responsive Styles */
     @media (max-width: 1400px) {
       .container {
@@ -1174,6 +1249,21 @@
     <div class="mt-2 text-center">
       جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
     </div>
+    <!-- أيقونات وسائل التواصل الاجتماعي -->
+    <div class="social-media-icons text-center mt-3" id="social-media-icons" style="display: none;">
+      <a href="#" class="social-icon facebook-icon" target="_blank" rel="noopener noreferrer" style="display: none;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png" alt="Facebook" style="width: 25px; height: 25px; object-fit: contain;">
+      </a>
+      <a href="#" class="social-icon instagram-icon" target="_blank" rel="noopener noreferrer" style="display: none;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/198px-Instagram_logo_2016.svg.png?20210403190622" alt="Instagram" style="width: 25px; height: 25px; object-fit: contain;">
+      </a>
+      <a href="#" class="social-icon whatsapp-icon" target="_blank" rel="noopener noreferrer" style="display: none;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/2062095_application_chat_communication_logo_whatsapp_icon.svg/105px-2062095_application_chat_communication_logo_whatsapp_icon.svg.png?20220531073934" alt="WhatsApp" style="width: 25px; height: 25px; object-fit: contain;">
+      </a>
+      <a href="#" class="social-icon tiktok-icon" target="_blank" rel="noopener noreferrer" style="display: none;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ionicons_logo-tiktok.svg/768px-Ionicons_logo-tiktok.svg.png" alt="TikTok" style="width: 25px; height: 25px; object-fit: contain;">
+      </a>
+    </div>
   </footer>
   
   
@@ -1316,6 +1406,71 @@
             element.src = data.logo;
           });
         }
+        
+        // تطبيق روابط وسائل التواصل الاجتماعي
+        applySocialMediaLinks(data);
+      }
+    }
+    
+    // دالة لتطبيق روابط وسائل التواصل الاجتماعي
+    function applySocialMediaLinks(settings) {
+      const socialIconsContainer = document.getElementById('social-media-icons');
+      if (!socialIconsContainer) return;
+      
+      let hasAnySocialLink = false;
+      
+      // تطبيق رابط الفيسبوك
+      if (settings.facebook_url && settings.facebook_url.trim()) {
+        const facebookIcon = socialIconsContainer.querySelector('.facebook-icon');
+        if (facebookIcon) {
+          facebookIcon.href = settings.facebook_url;
+          facebookIcon.style.display = 'inline-block';
+          hasAnySocialLink = true;
+        }
+      }
+      
+      // تطبيق رابط الانستقرام
+      if (settings.instagram_url && settings.instagram_url.trim()) {
+        const instagramIcon = socialIconsContainer.querySelector('.instagram-icon');
+        if (instagramIcon) {
+          instagramIcon.href = settings.instagram_url;
+          instagramIcon.style.display = 'inline-block';
+          hasAnySocialLink = true;
+        }
+      }
+      
+      // تطبيق رابط الواتساب
+      if (settings.whatsapp_url && settings.whatsapp_url.trim()) {
+        const whatsappIcon = socialIconsContainer.querySelector('.whatsapp-icon');
+        if (whatsappIcon) {
+          // تنسيق رابط الواتساب
+          let whatsappUrl = settings.whatsapp_url;
+          if (!whatsappUrl.startsWith('https://wa.me/') && !whatsappUrl.startsWith('http://wa.me/')) {
+            // إزالة الرموز والمسافات من رقم الهاتف
+            const phoneNumber = whatsappUrl.replace(/[\s\-\(\)]/g, '');
+            whatsappUrl = `https://wa.me/${phoneNumber}`;
+          }
+          whatsappIcon.href = whatsappUrl;
+          whatsappIcon.style.display = 'inline-block';
+          hasAnySocialLink = true;
+        }
+      }
+      
+      // تطبيق رابط التيك توك
+      if (settings.tiktok_url && settings.tiktok_url.trim()) {
+        const tiktokIcon = socialIconsContainer.querySelector('.tiktok-icon');
+        if (tiktokIcon) {
+          tiktokIcon.href = settings.tiktok_url;
+          tiktokIcon.style.display = 'inline-block';
+          hasAnySocialLink = true;
+        }
+      }
+      
+      // إظهار أو إخفاء حاوية الأيقونات
+      if (hasAnySocialLink) {
+        socialIconsContainer.style.display = 'block';
+      } else {
+        socialIconsContainer.style.display = 'none';
       }
     }
 
@@ -1783,7 +1938,7 @@
         if (loadingModal) {
           loadingModal.style.display = 'none';
         }
-      }, 3000);
+      }, 1500);
       
       loadStoreSettings();
       loadProducts();
