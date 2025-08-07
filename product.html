@@ -1270,8 +1270,12 @@
         margin-top: 2rem;
         padding: 1rem 1.2rem !important;
         border-radius: 15px;
+        
       }
-      
+      .main-footer {
+      font-size: 1rem;
+      color: #000000 !important;
+    }
       /* تحسين الفورم */
       .modern-form-container {
         margin: 15px 10px;
@@ -2092,6 +2096,90 @@
     }
     
   </style>
+  <script type="module" src="server-superbase.js"></script>
+  <script type="module">
+    import { supabase } from './server-superbase.js';
+
+// استخراج معرف المنتج من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get("id");
+
+async function injectDynamicPixel() {
+  if (!productId) return;
+
+  try {
+    // 1. جلب معرف البيكسل المرتبط بالمنتج
+    const { data: product, error: productError } = await supabase
+      .from('products')
+      .select('pixel')
+      .eq('id', productId)
+      .single();
+
+    if (productError || !product?.pixel) {
+      console.warn("لا يوجد بيكسل مرتبط بهذا المنتج");
+      return;
+    }
+
+    const pixelId = product.pixel;
+
+    // 2. جلب بيانات البيكسل من جدول ad_pixels
+    const { data: pixelData, error: pixelError } = await supabase
+      .from('ad_pixels')
+      .select('id, pixel_name, pixel_code')
+      .eq('id', pixelId)
+      .single();
+
+    if (pixelError || !pixelData) {
+      console.error("خطأ في جلب بيانات البيكسل:", pixelError?.message || "بيانات غير موجودة");
+      return;
+    }
+
+    // 3. معالجة بيانات البيكسل (JSONB)
+    let pixelType, pixelCode;
+    try {
+      const parsedCode = typeof pixelData.pixel_code === 'string' 
+        ? JSON.parse(pixelData.pixel_code) 
+        : pixelData.pixel_code;
+      
+      pixelType = parsedCode.type;
+      pixelCode = parsedCode.code;
+      
+      if (!pixelType || !pixelCode) {
+        throw new Error("بيانات البيكسل غير مكتملة");
+      }
+    } catch (e) {
+      console.error("خطأ في تحليل كود البيكسل:", e.message);
+      return;
+    }
+
+    console.log("نوع البيكسل:", pixelType, "| كود البيكسل:", pixelCode);
+
+    // 4. حقن كود التتبع حسب النوع
+    if (pixelType === 'facebook_pixel') {
+      // كود فيسبوك بكسل
+      !function(f,b,e,v,n,t,s){
+        if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)
+      }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      
+      fbq('init', pixelCode);
+      fbq('track', 'PageView');
+      fbq('track', 'ViewContent');
+    }
+    // يمكن إضافة أنواع أخرى من البيكسلات هنا
+
+  } catch (error) {
+    console.error("حدث خطأ غير متوقع:", error);
+  }
+}
+
+// تشغيل الدالة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', injectDynamicPixel);
+  </script>
 </head>
 <body>
   
@@ -2197,8 +2285,11 @@
     </div>
   </div>
   
-  <footer class="main-footer text-center p-3 mt-5">
-    جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
+  <footer class="main-footer p-3 mt-5"
+          style="color: #000 !important; background: #fff; padding: 1rem 1.2rem; margin: 2rem 10px 0 10px; border-radius: 0 0 18px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); font-size: 1rem; text-align: center;">
+    <div class="mt-2 text-center">
+      جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
+    </div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script type="module" src="server-superbase.js"></script>
