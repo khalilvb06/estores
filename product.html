@@ -2417,6 +2417,14 @@
     let statesData = [];
     let offers = [];
     let productPrice = 0;
+
+    
+      // إخفاء مودل التحميل بعد 3 ثواني
+      setTimeout(() => {
+        if (loadingModal) {
+          loadingModal.style.display = 'none';
+        }
+      }, 500);
     
     // دالة لجلب إعدادات المتجر وتطبيقها
     async function loadStoreSettings() {
@@ -4194,12 +4202,6 @@
         loadingModal.style.display = 'flex';
       }
       
-      // إخفاء مودل التحميل بعد 3 ثواني
-      setTimeout(() => {
-        if (loadingModal) {
-          loadingModal.style.display = 'none';
-        }
-      }, 3000);
       
       loadStoreSettings();
       loadProductDetails();
