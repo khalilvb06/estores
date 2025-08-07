@@ -209,6 +209,13 @@
       box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
     }
     
+    .main-footer {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 25px 25px 0 0;
+      box-shadow: 0 -4px 20px rgba(102,126,234,0.08);
+    }
+    
     .modal-content {
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -323,11 +330,11 @@
     
     /* تحسين الفوتر */
     .main-footer {
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border-radius: 25px 25px 0 0;
-      margin-top: 3rem;
-    }
+            background: black !important;
+            color: rgb(255, 255, 255) !important;
+            border-radius: 25px 25px 0 0;
+            box-shadow: 0 -4px 20px rgba(102,126,234,0.08);
+        }
     
     @media (max-width: 576px) {
       .main-footer {
@@ -357,6 +364,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="addLandingPage.html"><span>📄</span> صفحات الهبوط</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="categories.html"><span>🏷️</span> التصنيفات</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="orders.html"><span>🛒</span> الطلبات</a>
@@ -425,8 +435,13 @@
     </div>
   </div>
   
-  <footer class="main-footer text-center p-3 mt-5">
-    جميع الحقوق محفوظة &copy; <span id="footer-store-name">متجري</span>
+  <footer class="main-footer text-center py-3 mt-5">
+    <div class="container">
+      <p class="mb-0">
+        <i class="fas fa-heart text-danger me-1"></i>
+        جميع الحقوق محفوظة © 2024 متجر إلكتروني
+      </p>
+    </div>
   </footer>
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
